@@ -25,7 +25,7 @@ const Emailverify = () => {
     return (
         <div className="container mt-5" style={{ maxWidth: '400px' }}>
             <div className={`p-4 ${styles.signUpBox}`}>
-                <h1>Instagram</h1>
+                <h1>ReachNex</h1>
                 <form onSubmit={handleSubmit}>
                     <div className="form-floating mb-3">
                         <p>OTP has been sent to email: {formData.email}</p>
