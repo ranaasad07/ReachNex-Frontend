@@ -28,7 +28,7 @@ const ForgetPassword = () => {
         try {
             console.log("---------")
             console.log(formData)
-            const res = await axios.post('http://localhost:5000/instagram/forgetpassword', formData);
+            const res = await axios.post('http://localhost:5000/ReachNex/forgetpassword', formData);
 
             alert("otp send to email")
             setLoading(false);
@@ -49,7 +49,7 @@ const ForgetPassword = () => {
     return (
         <div className="container mt-5" style={{ maxWidth: '400px' }}>
             <div className={`p-4 ${styles.signUpBox}`}>
-                <h1>Instagram</h1>
+                <h1>ReachNex</h1>
                 <form onSubmit={handleSubmit}>
                     <div className="form-floating mb-3">
                         <input
