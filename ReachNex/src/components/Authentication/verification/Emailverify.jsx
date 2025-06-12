@@ -15,7 +15,7 @@ const Emailverify = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post('http://localhost:5000/instagram/verifyemail', formData);
+            const res = await axios.post('http://localhost:5000/ReachNex/verifyemail', formData);
             navigate('/');
         } catch (err) {
             alert('Invalid credentials');
