@@ -25,7 +25,8 @@ const SignInForm = () => {
             const decoded = jwtDecode(token);
             const { username, fullname, email, id } = decoded;
             // setUser({ username, fullname, email, id });
-            navigate(`/feed/${username}`);
+            // navigate(`/feed/${username}`);
+            navigate("/feed")
         } catch (err) {
             alert('Invalid credentials');
         }
