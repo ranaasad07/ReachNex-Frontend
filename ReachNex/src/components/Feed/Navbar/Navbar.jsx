@@ -14,7 +14,7 @@ const Navbar = () => {
       <div className={style.icons}>
         <ul>
   <li>
-    <Link to=""><FontAwesomeIcon icon={faHouseChimney} /><span>Home</span></Link>
+    <Link to="/feed"><FontAwesomeIcon icon={faHouseChimney} /><span>Home</span></Link>
   </li>
   <li>
     <Link to="/network"><FontAwesomeIcon icon={faUserGroup} /><span>My Network</span></Link>
