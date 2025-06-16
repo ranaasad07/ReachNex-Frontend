@@ -6,26 +6,39 @@ import AuthenticationContext from "./components/Contexts/AuthenticationContext/A
 import ForgetPassword from "./components/Authentication/forgetPassword/ForgetPassword";
 import VerifyForgetOtp from "./components/Authentication/verifyforgetotp/VerifyForgetOtp";
 import ChangePassword from "./components/Authentication/changePassword/ChangePassword";
-import Feed from "./components/Feed/Feed";
+import Home from "./Pages/Home/Home";
+import MyNetwork from "./Pages/MyNetwork/Network";
+import Jobs from "./Pages/Jobs/Jobs";
+import Feed from "./components/Feed/Feed"; // 🧠 Import the layout component
+import Messaging from "./Pages/Messaging/Messaging"
+import Notification from "./Pages/Notifications/Notification"
+import Profile from "./Pages/Profile/Profile"
 function App() {
   return (
     <BrowserRouter>
       <AuthenticationContext.Provider value={{}}>
         <Routes>
-
+          {/* Public Routes */}
           <Route path="/" element={<SignInForm />} />
-          <Route path="/SignUp" element={<SignUpForm />} />
-          <Route path="/Verify" element={<Emailverify />} />
+          <Route path="/signup" element={<SignUpForm />} />
+          <Route path="/verify" element={<Emailverify />} />
           <Route path="/forgetpassword" element={<ForgetPassword />} />
-          <Route path="/VerifyForgetOtp" element={<VerifyForgetOtp />} />
+          <Route path="/verifyforgetotp" element={<VerifyForgetOtp />} />
           <Route path="/changepassword" element={<ChangePassword />} />
-          <Route path="/feed" element={<Feed />} />
 
+          {/* Protected Routes inside Layout (Navbar visible here) */}
+          <Route element={<Feed />}>
+            <Route path="/feed" element={<Home />} />
+            <Route path="/network" element={<MyNetwork />} />
+            <Route path="/jobs" element={<Jobs />} />
+            <Route path="/messaging" element={<Messaging />} />
+            <Route path="/notifications" element={<Notification />} />
+            <Route path="/profile" element={<Profile />} />
 
+            {/* Add more protected routes here */}
+          </Route>
         </Routes>
       </AuthenticationContext.Provider>
-
-
     </BrowserRouter>
   );
 }
