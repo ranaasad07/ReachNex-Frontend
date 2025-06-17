@@ -5,7 +5,6 @@ const Profile = () => {
   return (
     <div>
       <div className='Container'>
-        <Card>
           <div className='MainDiv'>
             <div className='profile'>
                 <img className='img' src='https://media.licdn.com/dms/image/v2/D4D22AQGP1y6mhK9vzg/feedshare-shrink_800/B4DZc5ysy8GgAg-/0/1749021292012?e=1753315200&v=beta&t=tTi0UUsi1dMytYg6i2D66q35C4cIGkDl1n4zsWb80IA'/>
@@ -36,7 +35,6 @@ const Profile = () => {
 
             </div>
           </div>
-        </Card>
       </div>
     </div>
   )
