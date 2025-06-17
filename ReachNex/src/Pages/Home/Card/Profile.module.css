@@ -1,0 +1,68 @@
+.profileWrapper {
+  position: relative;
+  min-height: 220px; /* enough to hold everything */
+  background-color: #fff;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.profileImageContainer {
+  position: relative;
+  width: 100%;
+  height: 100px;
+  overflow: hidden;
+}
+
+.profileBgImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+
+.profileUserImage {
+  position: absolute;
+  top: 60px;
+  left: 20px;
+  z-index: 10;
+}
+
+.userImage {
+  height: 64px;
+  width: 64px;
+  border: 3px solid white;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.userData {
+  padding: 56px 16px 16px 16px; 
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.tagline {
+  font-size: 0.9rem;
+  color: #777;
+  font-style: italic;
+}
+
+.address {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.company {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #0066cc;
+}
