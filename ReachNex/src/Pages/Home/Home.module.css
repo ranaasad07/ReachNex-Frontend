@@ -1,0 +1,71 @@
+.home{
+    display: flex;
+    
+}
+.profileViwer{
+    width: 100%;
+    margin: 20px 0;
+}
+
+.startPostWrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* space between image and box */
+  width: 100%;
+  margin: 16px 0;
+}
+
+
+.label {
+  font-size: 1rem;
+  color: #333;
+  font-weight: 500;
+}
+
+.value {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #1e3a8a; 
+}
+.centerCon{
+     display: flex;
+     gap: 8px;
+     align-items: center;
+}
+.roundedImage {
+  width: 56px;
+  height: 56px;
+  border-radius: 36px; 
+  border: 2px solid white;
+  cursor: pointer;
+  object-fit: cover; 
+}
+.startPost{
+     width: 100%;
+     border: 1px solid #ccc; /* You can change color */
+     padding: 12px;
+     border-radius: 24px;
+     cursor: pointer;
+     transition: background-color 0.2s ease-in-out;
+}
+.startPost:hover{
+    background-color: #f5f5f5; 
+}
+.icon{
+    width: 100%;
+    display: flex;
+    margin-top: 12px;
+}
+.videoIcon{
+    display: flex;
+  gap: 8px;
+  padding: 8px;
+  cursor: pointer;
+  justify-content: center;
+  border-radius: 8px;
+  width: 33%;
+  transition: background-color 0.2s ease-in-out;
+}
+.videoIcon:hover {
+  background-color: #f5f5f5; 
+}
