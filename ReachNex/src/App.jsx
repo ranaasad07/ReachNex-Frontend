@@ -33,7 +33,7 @@ function App() {
             <Route path="/jobs" element={<Jobs />} />
             <Route path="/messaging" element={<Messaging />} />
             <Route path="/notifications" element={<Notification />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/profile/:id" element={<Profile />} />
 
             {/* Add more protected routes here */}
           </Route>

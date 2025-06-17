@@ -1,0 +1,86 @@
+.Container{
+    /* background-color: rgb(117, 114, 114); */
+    width: 70%;
+    margin: 0px auto;
+}
+.MainDiv{
+    background-color: #c1c4c9;
+    border-radius: 5px;
+}
+.img{
+    width: 100%;
+    height: 220px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+.profile{
+    position: relative;
+}
+.profileimg{
+    position: absolute;
+    object-fit: cover;
+    top: 120px;
+    left: 20px;
+}
+.profileimg1{
+  border-radius: 9999px;
+  border: 2px solid white;
+  cursor: pointer;
+  width: 140px;   
+  height: 140px;
+  object-fit: cover;
+}
+
+.main{
+    position: relative;
+    margin-top: 10px;
+    padding-left: 50px;
+    padding-top: 40px; 
+    padding-right: 40px;
+}
+.name{
+    font-size: 24px;
+    font-weight: 500;
+}
+.profession{
+    color: #374151;
+}
+.location{
+    font-size: 14px;
+line-height: 20px;
+color: #6B7280;
+}
+.connection{
+    font-size: 16px;
+  line-height: 24px;
+  color: #1E40AF;
+  width: fit-content;
+  cursor: pointer;
+}
+.connection:hover {
+    text-decoration: underline;
+}
+.buttondiv{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+.buttonmain{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 20px;
+}
+.btn{
+    cursor: pointer;
+    padding: 8px;
+    /* border: 1px solid black; */
+    border-radius: 8px;
+    background-color: #1E40AF;
+    color: white;
+    font-weight: 600;
+}
+.btn:hover{
+    background-color: white;
+    color: #1E40AF;
+}
