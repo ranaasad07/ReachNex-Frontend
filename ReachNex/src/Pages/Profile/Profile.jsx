@@ -1,7 +1,9 @@
 import React from 'react'
 import "./Profile.css"
 import img from "../../assets/react.svg"
+import { Link } from 'react-router-dom'
 const Profile = () => {
+
   return (
     <div>
       <div className='Container'>
@@ -24,7 +26,7 @@ const Profile = () => {
                     <div className='buttonmain'>
                       <div className='btn'>Open to</div>
                       <div className='btn'>Share</div>
-                      <div className='btn'>Log out</div>
+                      <Link to={"/"} className='btn'>Log out</Link>
                     </div>
                     <div className='buttonmain'>
                       <div className='btn'>Message</div>
