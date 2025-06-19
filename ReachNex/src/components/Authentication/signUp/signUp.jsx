@@ -21,7 +21,7 @@ const SignUpForm = () => {
     // console.log(code);
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true); // Start spinner
+        setLoading(true); 
 
         try {
             emailContext.emailForOtp = formData.email;
