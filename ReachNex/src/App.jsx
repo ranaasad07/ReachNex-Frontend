@@ -1,22 +1,31 @@
+import React, { useState } from "react"; // ✅ Add this
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import AuthenticationContext from "./components/Contexts/AuthenticationContext/AuthenticationContext";
+
 import SignUpForm from "./components/Authentication/signUp/signUp";
 import SignInForm from "./components/Authentication/signin/signIn";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Emailverify from "./components/Authentication/verification/Emailverify";
-import AuthenticationContext from "./components/Contexts/AuthenticationContext/AuthenticationContext";
 import ForgetPassword from "./components/Authentication/forgetPassword/ForgetPassword";
 import VerifyForgetOtp from "./components/Authentication/verifyforgetotp/VerifyForgetOtp";
 import ChangePassword from "./components/Authentication/changePassword/ChangePassword";
 import Home from "./Pages/Home/Home";
 import MyNetwork from "./Pages/MyNetwork/Network";
 import Jobs from "./Pages/Jobs/Jobs";
-import Feed from "./components/Feed/Feed"; // 🧠 Import the layout component
-import Messaging from "./Pages/Messaging/Messaging"
-import Notification from "./Pages/Notifications/Notification"
-import Profile from "./Pages/Profile/Profile"
+import Feed from "./components/Feed/Feed";
+import Messaging from "./Pages/Messaging/Messaging";
+import Notification from "./Pages/Notifications/Notification";
+import Profile from "./Pages/Profile/Profile";
+import Post from "./Pages/Home/Post/Post";
+
 function App() {
+  // ✅ Create user state here
+  const [user, setUser] = useState(null);
+
   return (
     <BrowserRouter>
-      <AuthenticationContext.Provider value={{}}>
+      <AuthenticationContext.Provider value={{ user, setUser }}>
+        {" "}
+        {/* ✅ Fix applied */}
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<SignInForm />} />
@@ -26,7 +35,7 @@ function App() {
           <Route path="/verifyforgetotp" element={<VerifyForgetOtp />} />
           <Route path="/changepassword" element={<ChangePassword />} />
 
-          {/* Protected Routes inside Layout (Navbar visible here) */}
+          {/* Protected Routes inside Layout */}
           <Route element={<Feed />}>
             <Route path="/feed" element={<Home />} />
             <Route path="/network" element={<MyNetwork />} />
@@ -34,8 +43,7 @@ function App() {
             <Route path="/messaging" element={<Messaging />} />
             <Route path="/notifications" element={<Notification />} />
             <Route path="/profile/:id" element={<Profile />} />
-
-            {/* Add more protected routes here */}
+            <Route path="/Post" element={<Post />} />
           </Route>
         </Routes>
       </AuthenticationContext.Provider>
