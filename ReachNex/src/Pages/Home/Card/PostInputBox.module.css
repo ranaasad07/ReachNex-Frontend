@@ -37,4 +37,62 @@ padding: 7px;
 .icons li:nth-child(3) svg {
   color: #ff9900; /* Article: yellow/orange */
 }
+.feedSection {
+  margin-top: 20px;
+  width: 550px;
+}
+
+.postCard {
+  background-color: white;
+  padding: 16px;
+  border-radius: 10px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.postUser {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.postProfile {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.postMedia {
+  width: 100%;
+  max-height: 400px;
+  object-fit: contain;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 12px;
+}
+
+.likeBtn,
+.commentBtn {
+  background-color: #f3f2ef;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.likeBtn:hover,
+.commentBtn:hover {
+  background-color: #e2e0dd;
+}
+
+
 
