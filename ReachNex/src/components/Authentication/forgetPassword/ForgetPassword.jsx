@@ -91,7 +91,6 @@ const ForgetPassword = () => {
 
                 <div className={styles.login}>
                     <p>Don't have an account? <br /><Link to="/signup">Sign Up</Link></p>
-                    <p>forget password? <br /><Link to="/forgetpassword">Forget Password</Link></p>
                 </div>
             </div>
         </div>

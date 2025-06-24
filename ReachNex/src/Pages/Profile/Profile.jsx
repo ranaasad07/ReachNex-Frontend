@@ -1,152 +1,37 @@
-// src/components/Profile.jsx
-import React, { useEffect, useState } from "react";
-import "./Profile.css";
-import { FaCamera, FaPen, FaUserAlt } from "react-icons/fa";
-import axios from "axios";
-import { useParams, useNavigate } from "react-router-dom";
-
-function Popup({ children, onClose }) {
+import React from 'react'
+import "./Profile.css"
+import img from "../../assets/react.svg"
+const Profile = () => {
   return (
-    <div className="popup-overlay" onClick={onClose}>
-      <div className="popup-box" onClick={(e) => e.stopPropagation()}>
-        {children}
-      </div>
-    </div>
-  );
-} 
+    <div>
+      <div className='Container'>
+          <div className='MainDiv'>
+            <div className='profile'>
+                <img className='img' src='https://media.licdn.com/dms/image/v2/D4D22AQGP1y6mhK9vzg/feedshare-shrink_800/B4DZc5ysy8GgAg-/0/1749021292012?e=1753315200&v=beta&t=tTi0UUsi1dMytYg6i2D66q35C4cIGkDl1n4zsWb80IA'/>
+                <div className='profileimg'>
+                  <img className='profileimg1' src="https://media.licdn.com/dms/image/v2/D4E22AQGzdwFPF_HJvA/feedshare-shrink_800/B4EZd07dtcHIAo-/0/1750013435577?e=1753315200&v=beta&t=nT64i52Jwur_krzOPc6WutE2jVZ05WcSNAGaZOBzzMU" alt="" />
+                </div>
+                <div></div>
+            </div>
+            <div className='main'>
+                <div >
+                  <div className='name'>Muhammad Shazaib</div>
+                  <div className='profession'>I am a Software engineer</div>
+                  <div className='location'>Lahore, Pakistan</div>
+                  <div className='connection'>4 Connection</div>
 
-export default function Profile() {
-  const { username } = useParams();
-  const navigate = useNavigate();
-
-  const [profile, setProfile] = useState(null);
-  const [errorMsg, setErrorMsg] = useState("");
-
-  const [showBannerPopup, setShowBannerPopup] = useState(false);
-  const [showAvatarPopup, setShowAvatarPopup] = useState(false);
-  const [showEditPopup, setShowEditPopup] = useState(false);
-
-  const [editForm, setEditForm] = useState({ name: "", profession: "", location: "" });
-  const [bannerFile, setBannerFile] = useState(null);
-  const [avatarFile, setAvatarFile] = useState(null);
-  const [bannerPreview, setBannerPreview] = useState(null);
-  const [avatarPreview, setAvatarPreview] = useState(null);
-
-  useEffect(() => {
-  // Temporarily skip API call, use dummy data
-  setProfile({
-    name: "",
-    profession: "",
-    location: "",
-    profileImage: "",
-    bannerImage: "",
-    connections: 123
-  });
-}, []);
-
-
-  if (errorMsg) return <div>{errorMsg}</div>;
-  if (!profile) return <div>Loading…</div>;
-
-  const handleBannerFile = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setBannerFile(file);
-      setBannerPreview(URL.createObjectURL(file));
-    }
-  };
-
-  const saveBanner = async () => {
-  if (!bannerFile) return;
-  const formData = new FormData();
-  formData.append("image", bannerFile);
-
-  try {
-    const { data } = await axios.put("http://localhost:5000/ReachNex/banner", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      },
-    });
-    setProfile(data);
-  } catch (err) {
-    console.error("Banner upload error:", err);
-  }
-
-  setBannerFile(null);
-  setBannerPreview(null);
-  setShowBannerPopup(false);
-};
-
-
-  const handleAvatarFile = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setAvatarFile(file);
-      setAvatarPreview(URL.createObjectURL(file));
-    }
-  };
-
-const saveAvatar = async () => {
-  if (!avatarFile) return;
-  const formData = new FormData();
-  formData.append("image", avatarFile);
-
-  try {
-    const { data } = await axios.put("http://localhost:5000/ReachNex/avatar", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      },
-    });
-    setProfile(data);
-  } catch (err) {
-    console.error("Avatar upload error:", err);
-  }
-
-  setAvatarFile(null);
-  setAvatarPreview(null);
-  setShowAvatarPopup(false);
-};
-
-
- const handleTextSave = async () => {
-  try {
-    let token = localStorage.getItem("token")
-    const { data } = await axios.put("http://localhost:5000/ReachNex/details", editForm, {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    });
-    setProfile(data);
-  } catch (err) {
-    console.error("Details update error:", err);
-  }
-  setShowEditPopup(false);
-};
-
-  return (
-    <div className="profile-container">
-      <div className="banner">
-        {profile.bannerImage ? (
-          <img src={profile.bannerImage} alt="Banner" className="banner-img" />
-        ) : (
-          <div className="banner-placeholder" />
-        )}
-        {!username && (
-          <button className="edit-banner-btn" title="Change cover photo" onClick={() => setShowBannerPopup(true)}>
-            <FaCamera />
-          </button>
-        )}
-        <div className="profile-pic-wrapper" onClick={() => !username && setShowAvatarPopup(true)}>
-          {profile.profileImage ? (
-            <img src={profile.profileImage} alt="Profile" className="profile-img" />
-          ) : (
-            <div className="profile-img placeholder"><FaUserAlt /></div>
-          )}
-          {!username && <span className="avatar-overlay"><FaCamera /></span>}
-        </div>
-      </div>
+                  <div className='buttondiv'>
+                    <div className='buttonmain'>
+                      <div className='btn'>Open to</div>
+                      <div className='btn'>Share</div>
+                      <div className='btn'>Log out</div>
+                    </div>
+                    <div className='buttonmain'>
+                      <div className='btn'>Message</div>
+                      <div className='btn'>Connect</div>
+                    </div>
+                  </div>
+                </div>
 
       <div className="details">
         <div className="name-row">
