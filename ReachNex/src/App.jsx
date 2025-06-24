@@ -9,11 +9,14 @@ import ChangePassword from "./components/Authentication/changePassword/ChangePas
 import Home from "./Pages/Home/Home";
 import MyNetwork from "./Pages/MyNetwork/Network";
 import Jobs from "./Pages/Jobs/Jobs";
-import Feed from "./components/Feed/Feed"; // 🧠 Import the layout component
+import Feed from "./components/Feed/Feed";
 import Messaging from "./Pages/Messaging/Messaging"
 import Notification from "./Pages/Notifications/Notification"
 import Profile from "./Pages/Profile/Profile"
+import useAuth from "./components/Authentication/useAuth/useAuth";
 function App() {
+  
+  const username = useAuth()
   return (
     <BrowserRouter>
       <AuthenticationContext.Provider value={{}}>
@@ -33,7 +36,8 @@ function App() {
             <Route path="/jobs" element={<Jobs />} />
             <Route path="/messaging" element={<Messaging />} />
             <Route path="/notifications" element={<Notification />} />
-            <Route path="/profile/:id" element={<Profile />} />
+
+            <Route path={`/profile/${username?.username}`} element={<Profile />} />
 
             {/* Add more protected routes here */}
           </Route>
