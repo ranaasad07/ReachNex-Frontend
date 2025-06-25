@@ -1,12 +1,14 @@
-import React from "react";
-// import ProfileComponent from './profileComponent/profileComponent'
-import AddSkills from "./Skill/Skills";
+
+import React from 'react'
+import ProfileComponent from './profileComponent/profileComponent'
+import AddSkill from './Skill/AddSkill'
 
 const Profile = () => {
   return (
     <div>
-      {/* <ProfileComponent/> */}
-      <AddSkills />
+
+      <ProfileComponent/>
+      <AddSkill/>
     </div>
   );
 };
