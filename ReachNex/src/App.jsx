@@ -15,6 +15,7 @@ import Feed from "./components/Feed/Feed"; // 🧠 Import the layout component
 import Messaging from "./Pages/Messaging/Messaging"
 import Notification from "./Pages/Notifications/Notification"
 import Profile from "./Pages/Profile/Profile"
+import Post from "./Pages/Home/Post/Post"
 function App() {
   const [user, setUser] = useState('')
   return (
