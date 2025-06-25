@@ -39,7 +39,7 @@ function App() {
             <Route path="/messaging" element={<Messaging />} />
             <Route path="/notifications" element={<Notification />} />
             <Route path="/profile/:id" element={<Profile />} />
-
+            <Route path="/Post" element={<Post />} />
             {/* Add more protected routes here */}
           </Route>
         </Routes>
