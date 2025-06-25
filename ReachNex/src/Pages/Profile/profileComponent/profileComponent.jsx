@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import "../Profile.css";
+import "./ProfileComponent.css";
 import { FaCamera, FaPen, FaUserAlt } from "react-icons/fa";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
@@ -129,6 +129,7 @@ export default function ProfileComponent() {
       });
       setProfile(data);
       setUser(data);
+      setPerUser(data);
     } catch (err) {
       console.error("Details update error:", err);
     }
@@ -188,17 +189,33 @@ export default function ProfileComponent() {
       </div>
 
       {showEditPopup && (
-        <Popup onClose={() => setShowEditPopup(false)}>
-          <h3>Edit Details</h3>
-          <input type="text" placeholder="Name" value={editForm.name} onChange={e => setEditForm({ ...editForm, name: e.target.value })} />
-          <input type="text" placeholder="Profession" value={editForm.profession} onChange={e => setEditForm({ ...editForm, profession: e.target.value })} />
-          <input type="text" placeholder="Location" value={editForm.location} onChange={e => setEditForm({ ...editForm, location: e.target.value })} />
-          <div className="popup-actions">
-            <button onClick={handleTextSave}>Save</button>
-            <button onClick={() => setShowEditPopup(false)}>Cancel</button>
-          </div>
-        </Popup>
-      )}
+  <Popup onClose={() => setShowEditPopup(false)}>
+    <h3>Edit Details</h3>
+    <input
+      type="text"
+      placeholder="Name"
+      value={editForm.fullName}
+      onChange={e => setEditForm({ ...editForm, fullName: e.target.value })}
+    />
+    <input
+      type="text"
+      placeholder="Profession"
+      value={editForm.profession}
+      onChange={e => setEditForm({ ...editForm, profession: e.target.value })}
+    />
+    <input
+      type="text"
+      placeholder="Location"
+      value={editForm.location}
+      onChange={e => setEditForm({ ...editForm, location: e.target.value })}
+    />
+    <div className="popup-actions">
+      <button onClick={handleTextSave}>Save</button>
+      <button onClick={() => setShowEditPopup(false)}>Cancel</button>
+    </div>
+  </Popup>
+)}
+
     </div>
   );
 }
