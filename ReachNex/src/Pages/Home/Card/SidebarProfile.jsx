@@ -8,7 +8,7 @@ const SidebarProfile = () => {
   const { user } = useContext(AuthenticationContext);
   // if (!user) return <p>Loading user...</p>;
   return (
-    <div>
+    <div className={style.mainContainer}>
       <div className={style.card}>
         <div className={style.backgroundimage}>
           <img

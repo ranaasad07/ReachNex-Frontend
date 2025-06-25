@@ -40,7 +40,7 @@ const Post = () => {
         mediaUrl,
         caption: desc,
       };
-
+        console.log(formData)
       const res = await axios.post(
         "http://localhost:5000/ReachNex/uploadPost",
         formData
