@@ -11,16 +11,12 @@ import ChangePassword from "./components/Authentication/changePassword/ChangePas
 import Home from "./Pages/Home/Home";
 import MyNetwork from "./Pages/MyNetwork/Network";
 import Jobs from "./Pages/Jobs/Jobs";
-import Feed from "./components/Feed/Feed";
-import Messaging from "./Pages/Messaging/Messaging";
-import Notification from "./Pages/Notifications/Notification";
-import Profile from "./Pages/Profile/Profile";
-import Post from "./Pages/Home/Post/Post";
-
+import Feed from "./components/Feed/Feed"; // 🧠 Import the layout component
+import Messaging from "./Pages/Messaging/Messaging"
+import Notification from "./Pages/Notifications/Notification"
+import Profile from "./Pages/Profile/Profile"
 function App() {
-  // ✅ Create user state here
-  const [user, setUser] = useState(null);
-
+  const [user, setUser] = useState('')
   return (
     <BrowserRouter>
       <AuthenticationContext.Provider value={{ user, setUser }}>
@@ -43,7 +39,8 @@ function App() {
             <Route path="/messaging" element={<Messaging />} />
             <Route path="/notifications" element={<Notification />} />
             <Route path="/profile/:id" element={<Profile />} />
-            <Route path="/Post" element={<Post />} />
+
+            {/* Add more protected routes here */}
           </Route>
         </Routes>
       </AuthenticationContext.Provider>

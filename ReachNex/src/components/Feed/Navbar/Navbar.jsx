@@ -2,9 +2,14 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import style from '../Navbar/Navbar.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import useAuth from '../../Authentication/useAuth/useAuth';
 import { faHouseChimney, faBriefcase, faEnvelope, faBell, faUserGroup, faUser } from '@fortawesome/free-solid-svg-icons';
 
 const Navbar = () => {
+
+    const username = useAuth()
+    console.log(username);
+
   return (
     <div className={style.Main}>
       <div className={style.logo}>
@@ -29,7 +34,7 @@ const Navbar = () => {
     <Link to="/notifications"><FontAwesomeIcon icon={faBell} /><span>Notification</span></Link>
   </li>
   <li>
-    <Link to={`profile/123456789`}><FontAwesomeIcon icon={faUser} /><span>Profile</span></Link>
+    <Link to={`profile/${username?.username}`}><FontAwesomeIcon icon={faUser} /><span>Profile</span></Link>
   </li>
 </ul>
 

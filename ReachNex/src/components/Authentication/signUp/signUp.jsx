@@ -21,13 +21,13 @@ const SignUpForm = () => {
     // console.log(code);
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true); // Start spinner
+        setLoading(true); 
 
         try {
             emailContext.emailForOtp = formData.email;
             await axios.post('http://localhost:5000/ReachNex/SignUp', formData);
                                  
-            alert('User registered successfully!');  
+             
             setLoading(false);
             navigate("/Verify");                    
 
