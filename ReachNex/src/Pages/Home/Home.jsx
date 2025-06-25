@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import SidebarProfile from "./Card/SidebarProfile";
 import Feed from "./Card/Feed";
 import RightSidebar from "./Card/RightSidebar";
@@ -13,39 +13,56 @@ import { Navigate, NavigationType } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
-  //  localStorage.setItem("token", token);
-  let navigate = useNavigate();
+ 
+const navigate = useNavigate();
+  const [user, setUser] = useState(null);
 
-  let tokenforlocalstorage = localStorage.getItem("token");
-  console.log(tokenforlocalstorage);
+  useEffect(() => {
+    const tokenforlocalstorage = localStorage.getItem("token");
+    console.log(tokenforlocalstorage, "mmmmmmmmmmmmmmmmmmmmmmmmmmmm");
 
-  // ✅ Decode and set user
-  const decoded = jwtDecode(tokenforlocalstorage);
-  const { username, fullname, email, id } = decoded;
-  console.log(id);
-  // const { user } =" useContext(AuthenticationContext);
-  if (id) {
-    let formData = { id: id };
-    async function a() {
+    if (!tokenforlocalstorage) {
+      // No token, redirect to login
+      navigate("/");
+      return;
+    }
+
+    let decoded;
+    try {
+      decoded = jwtDecode(tokenforlocalstorage);
+    } catch (err) {
+      console.log("Invalid token:", err);
+      navigate("/");
+      return;
+    }
+
+    const { username, fullname, email, id } = decoded;
+    console.log(id, "tttttttttt");
+
+    if (!id) {
+      navigate("/");
+      return;
+    }
+
+    // Verify user by ID on backend
+    const verifyUser = async () => {
       try {
         const res = await axios.post(
-          "http://localhost:5000/ReachNex/verfiyloginuser",
-          formData
+          "http://localhost:5000/reachnex/verifyloginuser",
+          { id }
         );
 
-        // setUser({ username, fullname, email, id });
-
-        // navigate("/feed");
+        // Assuming res.data.findUser contains user info
+        setUser(res.data.findUser);
       } catch (err) {
         console.log(err);
         console.log("Invalid credentials");
         navigate("/");
       }
-    }
-    a();
-  }
-  // console.log(user);
-  const [user, setUser] = useState("");
+    };
+
+    verifyUser();
+  }, [navigate]);
 
   return (
     <HomeAthentication value={{ user, setUser }}>
