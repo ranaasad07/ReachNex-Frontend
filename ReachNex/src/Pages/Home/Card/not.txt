@@ -12,19 +12,21 @@ const PostInputBox = () => {
   const { user } = useContext(AuthenticationContext);
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
-  const [openCommentBox, setOpenCommentBox] = useState(null);
-  const [commentInputs, setCommentInputs] = useState({});
 
   useEffect(() => {
     fetchPosts();
 
     socket.on("likeUpdated", ({ postId, likes }) => {
+      console.log("📡 Received Like Update:", postId);
       setPosts((prev) =>
-        prev.map((post) => (post._id === postId ? { ...post, likes } : post))
+        prev.map((post) =>
+          post._id === postId ? { ...post, likes } : post
+        )
       );
     });
 
     socket.on("commentAdded", ({ postId, comment }) => {
+      console.log("Received Comment Update:", postId);
       setPosts((prev) =>
         prev.map((post) =>
           post._id === postId
@@ -52,30 +54,26 @@ const PostInputBox = () => {
   const handleLike = async (postId) => {
     if (!user || !user.id) return alert("User not found");
     try {
-      await axios.post("http://localhost:5000/ReachNex/likePost", {
-        postId,
+      const res = await axios.post("http://localhost:5000/ReachNex/likePost", {
+        postId: postId,
         userId: user.id || user._id,
       });
+      console.log("Like Sent:", res.data);
     } catch (err) {
       console.error("Like Error:", err);
     }
   };
 
-  const handleComment = async (postId) => {
-    const text = commentInputs[postId];
-    if (!text) return;
-
+  const handleComment = async (postId, text) => {
+    console.log(user,"........")
+    if (!user || !user.id ) return alert("User not found");
     try {
       const res = await axios.post("http://localhost:5000/ReachNex/commentPost", {
-        postId,
-        userId: user.id || user._id,
+        postId: postId,
+        userId: user.id,
         text,
       });
-
-      if (res.status === 200) {
-        setCommentInputs((prev) => ({ ...prev, [postId]: "" }));
-        setOpenCommentBox(null); // Close after comment
-      }
+      console.log("Comment Sent:", res.data);
     } catch (err) {
       console.error("Comment Error:", err);
     }
@@ -131,54 +129,17 @@ const PostInputBox = () => {
 
               <div className={style.actions}>
                 <button onClick={() => handleLike(post._id)}>
-                  👍 Like ({post.likes?.length || 0})
+                  Like ({post.likes?.length || 0})
                 </button>
-                <button onClick={() => setOpenCommentBox(post._id)}>
-                  💬 Comment ({post.comments?.length || 0})
+                <button
+                  onClick={() => {
+                    const text = prompt("Add your comment:");
+                    if (text) handleComment(post._id, text);
+                  }}
+                >
+                  Comment ({post.comments?.length || 0})
                 </button>
               </div>
-
-              {openCommentBox === post._id && (
-                <div className={style.commentBox}>
-                  <input
-                    type="text"
-                    placeholder="Write a comment..."
-                    value={commentInputs[post._id] || ""}
-                    onChange={(e) =>
-                      setCommentInputs((prev) => ({
-                        ...prev,
-                        [post._id]: e.target.value,
-                      }))
-                    }
-                    className={style.commentInput}
-                  />
-                  <button
-                    onClick={() => handleComment(post._id)}
-                    className={style.commentBtn}
-                  >
-                    Post
-                  </button>
-
-                  <div className={style.commentList}>
-                    {post.comments?.map((cmt, i) => (
-                      <div key={i} className={style.commentItem}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                          <img
-                            src={
-                              cmt.userId?.profilePicture ||
-                              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"
-                            }
-                            alt="user"
-                            style={{ width: 32, height: 32, borderRadius: "50%" }}
-                          />
-                          <strong>{cmt.userId?.username || "User"}</strong>
-                        </div>
-                        <p style={{ marginLeft: 42 }}>{cmt.text}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
           ))
         ) : (
