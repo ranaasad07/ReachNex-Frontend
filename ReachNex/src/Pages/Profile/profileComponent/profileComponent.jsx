@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import "../Profile.css";
+import "./ProfileComponent.css";
 import { FaCamera, FaPen, FaUserAlt } from "react-icons/fa";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
@@ -39,7 +39,7 @@ export default function ProfileComponent() {
 
   useEffect(() => {
     if (id?.id) fetchUser();
-  }, [id]);
+  }, []);
 
   if (errorMsg) return <div>{errorMsg}</div>;
 
@@ -82,7 +82,7 @@ export default function ProfileComponent() {
           }
         );
         setUser(data);
-        setPerUser(data); // ✅ Instantly update UI
+        setPerUser(data); 
       } catch (err) {
         console.error("Banner update error:", err);
       }

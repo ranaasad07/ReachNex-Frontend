@@ -1,14 +1,14 @@
-import React from 'react'
-import ProfileComponent from './profileComponent/profileComponent'
-import AddSkill from './Skill/AddSkill'
+import React from "react";
+import ProfileComponent from "./profileComponent/profileComponent";
+import AddSkill from "./Skill/AddSkill";
 
 const Profile = () => {
   return (
     <div>
-      <ProfileComponent/>
+      <ProfileComponent />
       <AddSkill/>
     </div>
-  )
-}
+  );
+};
 
-export default Profile
+export default Profile;
