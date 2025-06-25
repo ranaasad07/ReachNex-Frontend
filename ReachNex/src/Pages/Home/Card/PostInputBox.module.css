@@ -1,0 +1,98 @@
+.mainContainer{
+    width: 550px;
+    background-color: rgb(253, 253, 253);
+    border-radius: 10px;
+}
+.postButton{
+width: 80%;
+border-radius: 20px;
+padding: 7px;
+}
+.profilePic {
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  border: 3px solid #fff;
+  margin-top: -0px;
+  background-color: #fff;
+}
+.icons ul{
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+.icons ul li{
+    list-style: none;
+    font-weight: bold;
+}
+
+.icons li:nth-child(1) svg {
+  color: #0cf41b; /* Video: blue */
+}
+
+.icons li:nth-child(2) svg {
+  color: #006eff; /* Photo: green */
+}
+
+.icons li:nth-child(3) svg {
+  color: #ff9900; /* Article: yellow/orange */
+}
+.feedSection {
+  margin-top: 20px;
+  width: 550px;
+}
+
+.postCard {
+  background-color: white;
+  padding: 16px;
+  border-radius: 10px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.postUser {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.postProfile {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.postMedia {
+  width: 100%;
+  max-height: 400px;
+  object-fit: contain;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 12px;
+}
+
+.likeBtn,
+.commentBtn {
+  background-color: #f3f2ef;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.likeBtn:hover,
+.commentBtn:hover {
+  background-color: #e2e0dd;
+}
+
+
+
