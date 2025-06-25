@@ -29,7 +29,7 @@ const Navbar = () => {
     <Link to="/notifications"><FontAwesomeIcon icon={faBell} /><span>Notification</span></Link>
   </li>
   <li>
-    <Link to="/profile"><FontAwesomeIcon icon={faUser} /><span>Me</span></Link>
+    <Link to={`profile/123456789`}><FontAwesomeIcon icon={faUser} /><span>Profile</span></Link>
   </li>
 </ul>
 
