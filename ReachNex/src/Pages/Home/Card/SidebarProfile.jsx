@@ -21,7 +21,7 @@ const SidebarProfile = () => {
         <img
           className={style.profilePic}
           src={
-            user?.profilePic !== "" && user?.profilePic !== undefined
+            user?.profilePicture !== "" && user?.profilePic !== undefined
               ? user?.profilePic
               : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"
           }

@@ -29,10 +29,10 @@ const SignInForm = () => {
       const { username, fullname, email, id } = decoded;
 
       setUser({ username, fullname, email, id });
-      localStorage.setItem(
-        "loggedInUser",
-        JSON.stringify({ username, fullname, email, id })
-      );
+      // localStorage.setItem(
+      //   "loggedInUser",
+      //   JSON.stringify({ username, fullname, email, id })
+      // );
 
       navigate("/feed");
     } catch (err) {
