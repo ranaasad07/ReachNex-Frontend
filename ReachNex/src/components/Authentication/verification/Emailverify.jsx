@@ -16,6 +16,7 @@ const Emailverify = () => {
         e.preventDefault();
         try {
             const res = await axios.post('http://localhost:5000/ReachNex/verifyemail', formData);
+            alert('User registered successfully!'); 
             navigate('/');
         } catch (err) {
             alert('Invalid credentials');

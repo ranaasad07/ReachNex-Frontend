@@ -8,6 +8,7 @@ import { faHouseChimney, faBriefcase, faEnvelope, faBell, faUserGroup, faUser } 
 const Navbar = () => {
 
     const username = useAuth()
+    console.log(username);
 
   return (
     <div className={style.Main}>

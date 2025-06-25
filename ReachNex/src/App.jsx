@@ -16,6 +16,7 @@ import Messaging from "./Pages/Messaging/Messaging"
 import Notification from "./Pages/Notifications/Notification"
 import Profile from "./Pages/Profile/Profile"
 function App() {
+  const [user, setUser] = useState('')
   return (
     <BrowserRouter>
       <AuthenticationContext.Provider value={{ user, setUser }}>
