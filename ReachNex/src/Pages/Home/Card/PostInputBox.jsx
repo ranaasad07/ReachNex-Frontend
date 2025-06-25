@@ -6,10 +6,7 @@ import VideocamIcon from "@mui/icons-material/Videocam";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import ArticleIcon from "@mui/icons-material/Article";
 import axios from "axios";
-import io from "socket.io-client";
-
-// ⚠️ Make sure backend is running on this port
-const socket = io("http://localhost:5000");
+import socket from "../socket";
 
 const PostInputBox = () => {
   const { user } = useContext(AuthenticationContext);
@@ -20,6 +17,7 @@ const PostInputBox = () => {
     fetchPosts();
 
     socket.on("likeUpdated", ({ postId, likes }) => {
+      console.log("📡 Received Like Update:", postId);
       setPosts((prev) =>
         prev.map((post) =>
           post._id === postId ? { ...post, likes } : post
@@ -28,6 +26,7 @@ const PostInputBox = () => {
     });
 
     socket.on("commentAdded", ({ postId, comment }) => {
+      console.log("Received Comment Update:", postId);
       setPosts((prev) =>
         prev.map((post) =>
           post._id === postId
@@ -53,29 +52,30 @@ const PostInputBox = () => {
   };
 
   const handleLike = async (postId) => {
+    if (!user || !user.id) return alert("User not found");
     try {
-      console.log("📤 Like Request Sent:", postId);
       const res = await axios.post("http://localhost:5000/ReachNex/likePost", {
-        postId,
-        userId: user._id,
+        postId: postId,
+        userId: user.id || user._id,
       });
-      console.log("✅ Like Response:", res.data);
-      // Socket emit not needed; backend is broadcasting
-    } catch (error) {
-      console.error("❌ Like error:", error);
+      console.log("Like Sent:", res.data);
+    } catch (err) {
+      console.error("Like Error:", err);
     }
   };
 
   const handleComment = async (postId, text) => {
+    console.log(user,"........")
+    if (!user || !user.id ) return alert("User not found");
     try {
       const res = await axios.post("http://localhost:5000/ReachNex/commentPost", {
-        postId,
-        userId: user._id,
+        postId: postId,
+        userId: user.id,
         text,
       });
-      console.log("✅ Comment Added:", res.data);
-    } catch (error) {
-      console.error("❌ Comment error:", error);
+      console.log("Comment Sent:", res.data);
+    } catch (err) {
+      console.error("Comment Error:", err);
     }
   };
 
@@ -129,7 +129,7 @@ const PostInputBox = () => {
 
               <div className={style.actions}>
                 <button onClick={() => handleLike(post._id)}>
-                  👍 Like ({post.likes?.length || 0})
+                  Like ({post.likes?.length || 0})
                 </button>
                 <button
                   onClick={() => {
@@ -137,14 +137,14 @@ const PostInputBox = () => {
                     if (text) handleComment(post._id, text);
                   }}
                 >
-                  💬 Comment ({post.comments?.length || 0})
+                  Comment ({post.comments?.length || 0})
                 </button>
               </div>
             </div>
           ))
         ) : (
           <p style={{ textAlign: "center", marginTop: "10px" }}>
-            No posts found ❌
+            No posts found
           </p>
         )}
       </div>
