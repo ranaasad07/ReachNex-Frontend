@@ -15,7 +15,7 @@ import Feed from "./components/Feed/Feed"; // 🧠 Import the layout component
 import Messaging from "./Pages/Messaging/Messaging"
 import Notification from "./Pages/Notifications/Notification"
 import Profile from "./Pages/Profile/Profile"
-import Post from "./Pages/Home/Post/Post"
+import Post from "./Pages/Home/Post/Post";
 function App() {
   const [user, setUser] = useState('')
   return (
@@ -40,7 +40,8 @@ function App() {
             <Route path="/messaging" element={<Messaging />} />
             <Route path="/notifications" element={<Notification />} />
             <Route path="/profile/:id" element={<Profile />} />
-            <Route path="/Post" element={<Post />} />
+            <Route path="/post" element={<Post/>} />
+            
             {/* Add more protected routes here */}
           </Route>
         </Routes>
