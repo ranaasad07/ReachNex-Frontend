@@ -116,20 +116,41 @@
   background-color: #ccc;
 }
 
-
-.delete-icon-btn {
+.icon-btn {
   background: none;
   border: none;
-  margin-left: 8px;
+  outline: none;
   cursor: pointer;
-  color: #d11a2a;
-  font-size: 18px;
-  display: flex;
+  padding: 4px;
+  margin-left: 5px;
+  text-decoration: none; /* 🔥 Underline ko remove karta hai */
+  display: inline-flex;
   align-items: center;
-  transition: transform 0.2s ease;
+  justify-content: center;
 }
 
-.delete-icon-btn:hover {
-  transform: scale(1.2);
-  color: #a00;
+.icon-btn:hover,
+.icon-btn:focus {
+  text-decoration: none;
+  outline: none;
+  border: none;
+}
+  
+.icon-btn.black svg {
+  color: black;
+}
+
+.manage-skill-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.manage-skill-buttons button {
+  margin-left: 5px;
+}
+
+.edit-skill-modal {
+  margin-top: 10px;
 }
