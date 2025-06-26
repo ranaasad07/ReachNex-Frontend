@@ -1,3 +1,4 @@
+// PostInputBox.jsx
 import React, { useContext, useEffect, useState } from "react";
 import style from "./PostInputBox.module.css";
 import AuthenticationContext from "../../../components/Contexts/AuthenticationContext/AuthenticationContext";
@@ -14,6 +15,7 @@ const PostInputBox = () => {
   const [posts, setPosts] = useState([]);
   const [openCommentBox, setOpenCommentBox] = useState(null);
   const [commentInputs, setCommentInputs] = useState({});
+  const [replyInputs, setReplyInputs] = useState({});
 
   useEffect(() => {
     fetchPosts();
@@ -34,9 +36,24 @@ const PostInputBox = () => {
       );
     });
 
+    socket.on("replyAdded", ({ postId, commentId, reply }) => {
+      setPosts((prev) =>
+        prev.map((post) => {
+          if (post._id !== postId) return post;
+          const updatedComments = post.comments.map((cmt) =>
+            cmt._id === commentId
+              ? { ...cmt, replies: [...(cmt.replies || []), reply] }
+              : cmt
+          );
+          return { ...post, comments: updatedComments };
+        })
+      );
+    });
+
     return () => {
       socket.off("likeUpdated");
       socket.off("commentAdded");
+      socket.off("replyAdded");
     };
   }, []);
 
@@ -74,10 +91,30 @@ const PostInputBox = () => {
 
       if (res.status === 200) {
         setCommentInputs((prev) => ({ ...prev, [postId]: "" }));
-        setOpenCommentBox(null); // Close after comment
+        setOpenCommentBox(null);
       }
     } catch (err) {
       console.error("Comment Error:", err);
+    }
+  };
+
+  const handleReply = async (postId, commentId) => {
+    const replyText = replyInputs[commentId];
+    if (!replyText) return;
+
+    try {
+      const res = await axios.post("http://localhost:5000/ReachNex/replyComment", {
+        postId,
+        commentId,
+        userId: user.id || user._id,
+        text: replyText,
+      });
+
+      if (res.status === 200) {
+        setReplyInputs((prev) => ({ ...prev, [commentId]: "" }));
+      }
+    } catch (err) {
+      console.error("Reply Error:", err);
     }
   };
 
@@ -87,10 +124,7 @@ const PostInputBox = () => {
         <div className={style.postContainer}>
           <img
             className={style.profilePic}
-            src={
-              user?.profilePic ||
-              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"
-            }
+            src={user?.profilePic || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"}
             alt="Profile"
           />
           <button
@@ -140,40 +174,82 @@ const PostInputBox = () => {
 
               {openCommentBox === post._id && (
                 <div className={style.commentBox}>
-                  <input
-                    type="text"
-                    placeholder="Write a comment..."
-                    value={commentInputs[post._id] || ""}
-                    onChange={(e) =>
-                      setCommentInputs((prev) => ({
-                        ...prev,
-                        [post._id]: e.target.value,
-                      }))
-                    }
-                    className={style.commentInput}
-                  />
-                  <button
-                    onClick={() => handleComment(post._id)}
-                    className={style.commentBtn}
-                  >
-                    Post
-                  </button>
+                  <div className={style.commentBoxHeader}>
+                    <input
+                      type="text"
+                      placeholder="Write a comment..."
+                      value={commentInputs[post._id] || ""}
+                      onChange={(e) =>
+                        setCommentInputs((prev) => ({
+                          ...prev,
+                          [post._id]: e.target.value,
+                        }))
+                      }
+                      className={style.commentInput}
+                    />
+                    <button
+                      onClick={() => setOpenCommentBox(null)}
+                      className={style.closeBtn}
+                    >
+                      ❌
+                    </button>
+                    <button
+                      onClick={() => handleComment(post._id)}
+                      className={style.commentBtn}
+                    >
+                      Post
+                    </button>
+                  </div>
 
                   <div className={style.commentList}>
                     {post.comments?.map((cmt, i) => (
                       <div key={i} className={style.commentItem}>
                         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                           <img
-                            src={
-                              cmt.userId?.profilePicture ||
-                              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"
-                            }
+                            src={cmt.userId?.profilePicture || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"}
                             alt="user"
                             style={{ width: 32, height: 32, borderRadius: "50%" }}
                           />
                           <strong>{cmt.userId?.username || "User"}</strong>
                         </div>
                         <p style={{ marginLeft: 42 }}>{cmt.text}</p>
+
+                        <div className={style.replySection}>
+                          {cmt.replies?.map((reply, rIdx) => (
+                            <div key={rIdx} style={{ marginLeft: 52 }}>
+                              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                                <img
+                                  src={reply.userId?.profilePicture || "https://i.pravatar.cc/30"}
+                                  style={{ width: 28, height: 28, borderRadius: "50%" }}
+                                  alt="reply-user"
+                                />
+                                <strong>{reply.userId?.username || "User"}</strong>
+                              </div>
+                              <p style={{ marginLeft: 36 }}>{reply.text}</p>
+                            </div>
+                          ))}
+
+                          <div style={{ marginLeft: 42, marginTop: 6 }}>
+                            <input
+                              type="text"
+                              placeholder="Write a reply..."
+                              value={replyInputs[cmt._id] || ""}
+                              onChange={(e) =>
+                                setReplyInputs((prev) => ({
+                                  ...prev,
+                                  [cmt._id]: e.target.value,
+                                }))
+                              }
+                              className={style.commentInput}
+                            />
+                            <button
+                              onClick={() => handleReply(post._id, cmt._id)}
+                              className={style.commentBtn}
+                            >
+                              Reply
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -182,9 +258,7 @@ const PostInputBox = () => {
             </div>
           ))
         ) : (
-          <p style={{ textAlign: "center", marginTop: "10px" }}>
-            No posts found
-          </p>
+          <p style={{ textAlign: "center", marginTop: "10px" }}>No posts found</p>
         )}
       </div>
     </>

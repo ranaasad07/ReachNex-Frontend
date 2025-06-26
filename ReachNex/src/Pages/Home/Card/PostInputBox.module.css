@@ -1,52 +1,84 @@
-.mainContainer{
-    width: 550px;
-    background-color: rgb(253, 253, 253);
-    border-radius: 10px;
+.mainContainer {
+  width: 100%;
+  max-width: 550px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  margin: 0 auto;
+  padding: 16px;
 }
-.postButton{
-width: 80%;
-border-radius: 20px;
-padding: 7px;
+
+.postContainer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
 }
+
+.postButton {
+  width: 100%;
+  border-radius: 25px;
+  padding: 10px 16px;
+  background-color: #f0f2f5;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.2s ease-in-out;
+}
+
+.postButton:hover {
+  background-color: #e4e6eb;
+}
+
 .profilePic {
   border-radius: 50%;
-  width: 80px;
-  height: 80px;
-  border: 3px solid #fff;
-  margin-top: -0px;
-  background-color: #fff;
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border: 2px solid #ddd;
 }
-.icons ul{
-    display: flex;
-    justify-content: space-between;
-    padding: 20px;
+
+.icons ul {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0 0 0;
 }
-.icons ul li{
-    list-style: none;
-    font-weight: bold;
+
+.icons ul li {
+  list-style: none;
+  font-weight: 500;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
 }
 
 .icons li:nth-child(1) svg {
-  color: #0cf41b; /* Video: blue */
+  color: #0cf41b;
 }
 
 .icons li:nth-child(2) svg {
-  color: #006eff; /* Photo: green */
+  color: #006eff;
 }
 
 .icons li:nth-child(3) svg {
-  color: #ff9900; /* Article: yellow/orange */
+  color: #ff9900;
 }
+
 .feedSection {
-  margin-top: 20px;
-  width: 550px;
+  margin-top: 24px;
+  width: 100%;
+  max-width: 550px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .postCard {
   background-color: white;
   padding: 16px;
   border-radius: 10px;
-  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   margin-bottom: 20px;
 }
 
@@ -54,7 +86,7 @@ padding: 7px;
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .postProfile {
@@ -68,31 +100,101 @@ padding: 7px;
   width: 100%;
   max-height: 400px;
   object-fit: contain;
-  border-radius: 8px;
-  margin-top: 10px;
+  border-radius: 10px;
+  margin-top: 12px;
 }
 
 .actions {
-  margin-top: 10px;
   display: flex;
-  gap: 12px;
+  gap: 14px;
+  margin-top: 12px;
 }
 
-.likeBtn,
-.commentBtn {
+.actions button {
   background-color: #f3f2ef;
   border: none;
-  padding: 8px 16px;
+  padding: 8px 14px;
   border-radius: 20px;
   cursor: pointer;
   font-weight: 500;
-  transition: 0.2s;
+  transition: all 0.2s ease-in-out;
 }
 
-.likeBtn:hover,
-.commentBtn:hover {
+.actions button:hover {
   background-color: #e2e0dd;
 }
 
+.commentBox {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+}
 
+.commentInput {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  margin-top: 8px;
+  margin-bottom: 10px;
+  outline: none;
+}
 
+.commentBtn {
+  padding: 6px 14px;
+  background-color: #0a66c2;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-left: 6px;
+}
+
+.commentBtn:hover {
+  background-color: #004182;
+}
+
+.commentList {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.commentItem {
+  background-color: #f9f9f9;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.replySection {
+  margin-top: 8px;
+  margin-left: 32px;
+  padding-left: 10px;
+  border-left: 2px solid #eee;
+}
+
+.replySection input {
+  width: 90%;
+  margin-top: 6px;
+  padding: 6px 10px;
+  border-radius: 18px;
+  border: 1px solid #ccc;
+  outline: none;
+}
+
+.replySection button {
+  padding: 5px 12px;
+  background-color: #0a66c2;
+  color: white;
+  border: none;
+  border-radius: 16px;
+  font-size: 13px;
+  margin-left: 4px;
+  cursor: pointer;
+}
+
+.replySection button:hover {
+  background-color: #004182;
+}
