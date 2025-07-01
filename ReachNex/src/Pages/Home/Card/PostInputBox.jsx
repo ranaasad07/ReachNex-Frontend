@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import style from "./PostInputBox.module.css";
 import AuthenticationContext from "../../../components/Contexts/AuthenticationContext/AuthenticationContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import ArticleIcon from "@mui/icons-material/Article";
@@ -102,12 +102,25 @@ const PostInputBox = () => {
           </button>
         </div>
         <div className={style.icons}>
-          <ul>
-            <li><VideocamIcon /> Video</li>
-            <li><AddAPhotoIcon /> Pic</li>
-            <li><ArticleIcon /> Article</li>
-          </ul>
-        </div>
+  <ul>
+    <li>
+      <Link to="/Post" className={style.iconLink}>
+        <VideocamIcon /> Video
+      </Link>
+    </li>
+    <li>
+      <Link to="/Post" className={style.iconLink}>
+        <AddAPhotoIcon /> Pic
+      </Link>
+    </li>
+    <li>
+      <span className={style.iconLink}>
+        <ArticleIcon /> Article
+      </span>
+    </li>
+  </ul>
+</div>
+
       </div>
 
       <div className={style.feedSection}>

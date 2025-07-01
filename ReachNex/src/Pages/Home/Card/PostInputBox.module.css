@@ -16,22 +16,37 @@ padding: 7px;
   margin-top: -0px;
   background-color: #fff;
 }
-.icons ul{
-    display: flex;
-    justify-content: space-between;
-    padding: 20px;
+.icons ul {
+  list-style: none;
+  padding: 20px;
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: center;
 }
-.icons ul li{
-    list-style: none;
-    font-weight: bold;
+.iconLink {
+  text-decoration: none;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
 }
 
+.iconLink:hover {
+  color: #0a66c2;
+}
+
+/* Specific icon colors */
 .icons li:nth-child(1) svg {
-  color: #0cf41b; /* Video: blue */
+  color: #0cf41b;
 }
 
 .icons li:nth-child(2) svg {
-  color: #006eff; /* Photo: green */
+  color: #006eff;
 }
 
 .icons li:nth-child(3) svg {
