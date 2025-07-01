@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import style from "./PostInputBox.module.css";
 import AuthenticationContext from "../../../components/Contexts/AuthenticationContext/AuthenticationContext";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import ArticleIcon from "@mui/icons-material/Article";
@@ -10,11 +10,11 @@ import socket from "../socket";
 
 const PostInputBox = () => {
   const { user } = useContext(AuthenticationContext);
-    // console.log(user,"qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq");
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
   const [openCommentBox, setOpenCommentBox] = useState(null);
   const [commentInputs, setCommentInputs] = useState({});
+  const [replyInputs, setReplyInputs] = useState({});
 
   useEffect(() => {
     fetchPosts();
@@ -35,15 +35,32 @@ const PostInputBox = () => {
       );
     });
 
+    socket.on("replyAdded", ({ postId, commentId, reply }) => {
+      setPosts((prev) =>
+        prev.map((post) => {
+          if (post._id !== postId) return post;
+          const updatedComments = post.comments.map((cmt) =>
+            cmt._id === commentId
+              ? { ...cmt, replies: [...(cmt.replies || []), reply] }
+              : cmt
+          );
+          return { ...post, comments: updatedComments };
+        })
+      );
+    });
+
     return () => {
       socket.off("likeUpdated");
       socket.off("commentAdded");
+      socket.off("replyAdded");
     };
   }, []);
 
   const fetchPosts = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/ReachNex/gettingAllPosts");
+      const res = await axios.get(
+        "http://localhost:5000/ReachNex/gettingAllPosts"
+      );
       setPosts(res.data.Posts || []);
     } catch (err) {
       console.error("Error fetching posts:", err);
@@ -67,18 +84,44 @@ const PostInputBox = () => {
     if (!text) return;
 
     try {
-      const res = await axios.post("http://localhost:5000/ReachNex/commentPost", {
-        postId,
-        userId: user.id || user._id,
-        text,
-      });
+      const res = await axios.post(
+        "http://localhost:5000/ReachNex/commentPost",
+        {
+          postId,
+          userId: user.id || user._id,
+          text,
+        }
+      );
 
       if (res.status === 200) {
         setCommentInputs((prev) => ({ ...prev, [postId]: "" }));
-        setOpenCommentBox(null); // Close after comment
+        setOpenCommentBox(null);
       }
     } catch (err) {
       console.error("Comment Error:", err);
+    }
+  };
+
+  const handleReply = async (postId, commentId) => {
+    const replyText = replyInputs[commentId];
+    if (!replyText) return;
+
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/ReachNex/replyComment",
+        {
+          postId,
+          commentId,
+          userId: user.id || user._id,
+          text: replyText,
+        }
+      );
+
+      if (res.status === 200) {
+        setReplyInputs((prev) => ({ ...prev, [commentId]: "" }));
+      }
+    } catch (err) {
+      console.error("Reply Error:", err);
     }
   };
 
@@ -89,7 +132,7 @@ const PostInputBox = () => {
           <img
             className={style.profilePic}
             src={
-              user?.profilePicture ||
+              user?.profilePic ||
               "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"
             }
             alt="Profile"
@@ -102,25 +145,18 @@ const PostInputBox = () => {
           </button>
         </div>
         <div className={style.icons}>
-  <ul>
-    <li>
-      <Link to="/Post" className={style.iconLink}>
-        <VideocamIcon /> Video
-      </Link>
-    </li>
-    <li>
-      <Link to="/Post" className={style.iconLink}>
-        <AddAPhotoIcon /> Pic
-      </Link>
-    </li>
-    <li>
-      <span className={style.iconLink}>
-        <ArticleIcon /> Article
-      </span>
-    </li>
-  </ul>
-</div>
-
+          <ul>
+            <li>
+              <VideocamIcon /> Video
+            </li>
+            <li>
+              <AddAPhotoIcon /> Pic
+            </li>
+            <li>
+              <ArticleIcon /> Article
+            </li>
+          </ul>
+        </div>
       </div>
 
       <div className={style.feedSection}>
@@ -130,7 +166,9 @@ const PostInputBox = () => {
               <div className={style.postUser}>
                 <img
                   className={style.postProfile}
-                  src={post.userId?.profilePicture || "https://i.pravatar.cc/300"}
+                  src={
+                    post.userId?.profilePicture || "https://i.pravatar.cc/300"
+                  }
                   alt="User"
                 />
                 <h4>{post.userId?.username || "User"}</h4>
@@ -138,9 +176,17 @@ const PostInputBox = () => {
               <p>{post.caption}</p>
               {post.mediaUrl &&
                 (post.mediaUrl.includes("video") ? (
-                  <video controls className={style.postMedia} src={post.mediaUrl} />
+                  <video
+                    controls
+                    className={style.postMedia}
+                    src={post.mediaUrl}
+                  />
                 ) : (
-                  <img className={style.postMedia} src={post.mediaUrl} alt="Post" />
+                  <img
+                    className={style.postMedia}
+                    src={post.mediaUrl}
+                    alt="Post"
+                  />
                 ))}
 
               <div className={style.actions}>
@@ -154,40 +200,110 @@ const PostInputBox = () => {
 
               {openCommentBox === post._id && (
                 <div className={style.commentBox}>
-                  <input
-                    type="text"
-                    placeholder="Write a comment..."
-                    value={commentInputs[post._id] || ""}
-                    onChange={(e) =>
-                      setCommentInputs((prev) => ({
-                        ...prev,
-                        [post._id]: e.target.value,
-                      }))
-                    }
-                    className={style.commentInput}
-                  />
-                  <button
-                    onClick={() => handleComment(post._id)}
-                    className={style.commentBtn}
-                  >
-                    Post
-                  </button>
+                  <div className={style.commentBoxHeader}>
+                    <input
+                      type="text"
+                      placeholder="Write a comment..."
+                      value={commentInputs[post._id] || ""}
+                      onChange={(e) =>
+                        setCommentInputs((prev) => ({
+                          ...prev,
+                          [post._id]: e.target.value,
+                        }))
+                      }
+                      className={style.commentInput}
+                    />
+                    <button
+                      onClick={() => setOpenCommentBox(null)}
+                      className={style.closeBtn}
+                    >
+                      ❌
+                    </button>
+                    <button
+                      onClick={() => handleComment(post._id)}
+                      className={style.commentBtn}
+                    >
+                      Post
+                    </button>
+                  </div>
 
                   <div className={style.commentList}>
                     {post.comments?.map((cmt, i) => (
                       <div key={i} className={style.commentItem}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 10,
+                          }}
+                        >
                           <img
                             src={
                               cmt.userId?.profilePicture ||
                               "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"
                             }
                             alt="user"
-                            style={{ width: 32, height: 32, borderRadius: "50%" }}
+                            style={{
+                              width: 32,
+                              height: 32,
+                              borderRadius: "50%",
+                            }}
                           />
                           <strong>{cmt.userId?.username || "User"}</strong>
                         </div>
                         <p style={{ marginLeft: 42 }}>{cmt.text}</p>
+
+                        <div className={style.replySection}>
+                          {cmt.replies?.map((reply, rIdx) => (
+                            <div key={rIdx} style={{ marginLeft: 52 }}>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: 8,
+                                }}
+                              >
+                                <img
+                                  src={
+                                    reply.userId?.profilePicture ||
+                                    "https://i.pravatar.cc/30"
+                                  }
+                                  style={{
+                                    width: 28,
+                                    height: 28,
+                                    borderRadius: "50%",
+                                  }}
+                                  alt="reply-user"
+                                />
+                                <strong>
+                                  {reply.userId?.username || "User"}
+                                </strong>
+                              </div>
+                              <p style={{ marginLeft: 36 }}>{reply.text}</p>
+                            </div>
+                          ))}
+
+                          <div style={{ marginLeft: 42, marginTop: 6 }}>
+                            <input
+                              type="text"
+                              placeholder="Write a reply..."
+                              value={replyInputs[cmt._id] || ""}
+                              onChange={(e) =>
+                                setReplyInputs((prev) => ({
+                                  ...prev,
+                                  [cmt._id]: e.target.value,
+                                }))
+                              }
+                              className={style.commentInput}
+                            />
+                            <button
+                              onClick={() => handleReply(post._id, cmt._id)}
+                              className={style.commentBtn}
+                            >
+                              Reply
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     ))}
                   </div>
