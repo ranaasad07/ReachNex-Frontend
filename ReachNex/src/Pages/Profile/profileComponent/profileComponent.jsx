@@ -45,6 +45,7 @@ export default function ProfileComponent() {
 
 
   const openCloudinaryWidget = (onSuccess) => {
+    let uploadedImageUrl = null;
     const widget = window.cloudinary.createUploadWidget(
       {
         cloudName: "dlhjpvfik",
@@ -52,20 +53,23 @@ export default function ProfileComponent() {
         sources: ["local", "url", "camera"],
         multiple: false,
         folder: "profile_uploads",
-        showCompletedButton: false, 
+        showCompletedButton: true,
         showUploadMoreButton: false,
         maxFiles: 1,
       },
-      async (error, result) => {
+      (error, result) => {
         if (!error && result.event === "success") {
-          const imageUrl = result.info.secure_url;
-          onSuccess(imageUrl); 
-        } else if (error) {
+          uploadedImageUrl = result.info.secure_url;
+        }
+        if (result.event === "close" && uploadedImageUrl) {
+          onSuccess(uploadedImageUrl);
+        }
+        if (error) {
           console.error("Cloudinary Error:", error);
         }
       }
     );
-    widget.open(); 
+    widget.open();
   };
 
   // ✅ Banner Upload
@@ -102,6 +106,7 @@ export default function ProfileComponent() {
             },
           }
         );
+        // console.log("111111111111111111111111111", data)
         setUser(data);
         setPerUser(data); // ✅ Instantly update UI
       } catch (err) {

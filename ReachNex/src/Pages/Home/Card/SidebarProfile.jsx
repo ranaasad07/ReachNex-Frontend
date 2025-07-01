@@ -4,8 +4,8 @@ import AuthenticationContext from "../../../components/Contexts/AuthenticationCo
 import style from "./SidebarProfile.module.css";
 
 const SidebarProfile = () => {
-  console.log(AuthenticationContext);
   const { user } = useContext(AuthenticationContext);
+  console.log("------------------------------", user);
   // if (!user) return <p>Loading user...</p>;
   return (
     <div className={style.mainContainer}>
@@ -17,12 +17,11 @@ const SidebarProfile = () => {
             alt=""
           />
         </div>
-        {/* {console.log("=--0-0-0", user.profilePic)} */}
         <img
           className={style.profilePic}
           src={
-            user?.profilePicture !== "" && user?.profilePic !== undefined
-              ? user?.profilePic
+            user?.profilePicture
+              ? user.profilePicture
               : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"
           }
           alt="Profile image"

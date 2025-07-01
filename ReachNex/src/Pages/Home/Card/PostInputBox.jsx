@@ -10,6 +10,7 @@ import socket from "../socket";
 
 const PostInputBox = () => {
   const { user } = useContext(AuthenticationContext);
+    // console.log(user,"qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq");
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
   const [openCommentBox, setOpenCommentBox] = useState(null);
@@ -88,7 +89,7 @@ const PostInputBox = () => {
           <img
             className={style.profilePic}
             src={
-              user?.profilePic ||
+              user?.profilePicture ||
               "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"
             }
             alt="Profile"

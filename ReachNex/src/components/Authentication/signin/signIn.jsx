@@ -24,19 +24,19 @@ const SignInForm = () => {
       const { token } = res.data;
       localStorage.setItem("token", token);
 
-      // ✅ Decode and set user
+      // Decode token to get user id
       const decoded = jwtDecode(token);
-      const { username, fullname, email, id } = decoded;
+      const { id } = decoded;
 
-      setUser({ username, fullname, email, id });
-      // localStorage.setItem(
-      //   "loggedInUser",
-      //   JSON.stringify({ username, fullname, email, id })
-      // );
+      // Fetch full user profile
+      const userProfileRes = await axios.get(
+        `http://localhost:5000/ReachNex/getuser/${id}`
+      );
+      setUser(userProfileRes.data.user);
 
       navigate("/feed");
     } catch (err) {
-      console.log(err)
+      console.log(err);
       alert("Invalid credentials");
     }
   };
