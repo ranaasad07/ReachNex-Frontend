@@ -26,7 +26,7 @@ const SidebarProfile = () => {
           }
           alt="Profile image"
         />
-        <h3>{user?.username}</h3>
+        <h3>{user?.fullName}</h3>
         <p>{user?.email}</p>
         <button className={style.button}>Experince</button>
       </div>
