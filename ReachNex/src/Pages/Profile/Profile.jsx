@@ -11,7 +11,9 @@ const Profile = () => {
 
       <ProfileComponent />
       <AddSkill/>
+      <div id="experience">
       <AddExperience/>
+    </div>
 
     </div>
   );

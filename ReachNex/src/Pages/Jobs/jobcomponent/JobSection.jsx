@@ -1,12 +1,11 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import "./JobSection.css";
 
-
-import  AuthenticationContext  from "../../../components/Contexts/AuthenticationContext/AuthenticationContext";
+import AuthenticationContext from "../../../components/Contexts/AuthenticationContext/AuthenticationContext";
 
 const JobsSection = () => {
-  const { user } = useContext(AuthenticationContext); // 👈 Logged-in user
+  const { user } = useContext(AuthenticationContext);
   const [jobs, setJobs] = useState([]);
   const [showForm, setShowForm] = useState(false);
 
@@ -18,6 +17,20 @@ const JobsSection = () => {
     logoUrl: "",
     description: "",
   });
+
+  // ✅ Fetch jobs on component load
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/ReachNex/jobs");
+        setJobs(res.data); // set all jobs from backend
+      } catch (err) {
+        console.error("❌ Error fetching jobs:", err);
+      }
+    };
+
+    fetchJobs();
+  }, []);
 
   const toggleForm = () => setShowForm((prev) => !prev);
 
@@ -31,11 +44,11 @@ const JobsSection = () => {
 
     try {
       const response = await axios.post("http://localhost:5000/ReachNex/jobs", {
-        userId: user._id, // 👈 Attach userId
+        userId: user._id,
         ...newJob,
       });
 
-      setJobs([response.data, ...jobs]); // ⬅️ Add to UI
+      setJobs([response.data, ...jobs]); // new job on top
       setNewJob({
         title: "",
         company: "",
@@ -115,6 +128,7 @@ const JobsSection = () => {
         </form>
       )}
 
+      {/* ✅ Jobs Display Section */}
       <div className="jobCardsContainer">
         {jobs.map((job, index) => (
           <div key={index} className="jobCard">
