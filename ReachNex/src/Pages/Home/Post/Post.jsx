@@ -65,14 +65,14 @@ const Post = () => {
       <div style={styles.user}>
         <img
           src={
-            user?.profilePic
-              ? user.profilePic
+            user?.profilePicture
+              ? user.profilePicture
               : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"
           }
           alt="profile"
           style={styles.avatar}
         />
-        <h3>{user?.username || "User"}</h3>
+        <h3>{user?.fullName || "User"}</h3>
       </div>
 
       {/* Add Description */}

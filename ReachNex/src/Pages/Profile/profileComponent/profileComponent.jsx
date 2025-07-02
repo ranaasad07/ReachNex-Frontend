@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import "../Profile.css";
+import "./ProfileComponent.css";
 import { FaCamera, FaPen, FaUserAlt } from "react-icons/fa";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
@@ -39,12 +39,13 @@ export default function ProfileComponent() {
 
   useEffect(() => {
     if (id?.id) fetchUser();
-  }, [id]);
+  }, []);
 
   if (errorMsg) return <div>{errorMsg}</div>;
 
 
   const openCloudinaryWidget = (onSuccess) => {
+    let uploadedImageUrl = null;
     const widget = window.cloudinary.createUploadWidget(
       {
         cloudName: "dlhjpvfik",
@@ -52,20 +53,23 @@ export default function ProfileComponent() {
         sources: ["local", "url", "camera"],
         multiple: false,
         folder: "profile_uploads",
-        showCompletedButton: false, 
+        showCompletedButton: true,
         showUploadMoreButton: false,
         maxFiles: 1,
       },
-      async (error, result) => {
+      (error, result) => {
         if (!error && result.event === "success") {
-          const imageUrl = result.info.secure_url;
-          onSuccess(imageUrl); 
-        } else if (error) {
+          uploadedImageUrl = result.info.secure_url;
+        }
+        if (result.event === "close" && uploadedImageUrl) {
+          onSuccess(uploadedImageUrl);
+        }
+        if (error) {
           console.error("Cloudinary Error:", error);
         }
       }
     );
-    widget.open(); 
+    widget.open();
   };
 
   // ✅ Banner Upload
@@ -82,7 +86,7 @@ export default function ProfileComponent() {
           }
         );
         setUser(data);
-        setPerUser(data); // ✅ Instantly update UI
+        setPerUser(data); 
       } catch (err) {
         console.error("Banner update error:", err);
       }
@@ -102,6 +106,7 @@ export default function ProfileComponent() {
             },
           }
         );
+        // console.log("111111111111111111111111111", data)
         setUser(data);
         setPerUser(data); // ✅ Instantly update UI
       } catch (err) {

@@ -54,11 +54,14 @@
   cursor: pointer;
 }
 
+/* Specific icon colors */
 .icons li:nth-child(1) svg {
+  color: #0cf41b;
   color: #0cf41b;
 }
 
 .icons li:nth-child(2) svg {
+  color: #006eff;
   color: #006eff;
 }
 
