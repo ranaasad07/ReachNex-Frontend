@@ -2,19 +2,24 @@ import React, { useEffect, useState } from "react";
 import ChatList from "./ChatList";
 import ChatBox from "./ChatBox";
 import MessageInput from "./MessageInput";
-// import { io } from "socket.io-client";
+import { io } from "socket.io-client";
 import axios from "axios";
 import { useContext } from "react";
 import AuthenticationContext from "../../components/Contexts/AuthenticationContext/AuthenticationContext";
+import socket from "../../socket";
 
 // const socket = io("http://localhost:5000");
 
 const Messaging = () => {
+  const { user } = useContext(AuthenticationContext);
+  console.log(JSON.stringify(user), "Cru userId======");
+  // return;
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [messages, setMessages] = useState([]);
-  const { user } = useContext(AuthenticationContext);
-  const currentUserId = user?.id;
+
+  const currentUserId = user?._id;
+  console.log(user?._id, " userId======");
   // console.log(
   //   "-=-=-=-=-",
   //   user,
@@ -30,13 +35,16 @@ const Messaging = () => {
   //   const fetchMe = async () => {
   //     const res = await axios.get("/ReachNex/check", { withCredentials: true });
   //     setCurrentUserId(res.data._id);
-  //     // socket.emit("join", res.data._id);
+  // socket.emit("join", res.data._id);
   //   };
   //   fetchMe();
   // }, []);
 
   useEffect(() => {
-    if (currentUserId) fetchUsers();
+    if (currentUserId) {
+      socket.emit("join", currentUserId);
+      fetchUsers();
+    }
   }, [currentUserId]);
 
   const fetchUsers = async () => {
@@ -63,15 +71,8 @@ const Messaging = () => {
     }
   }, [selectedUser]);
 
-  // useEffect(() => {
-  //   socket.on("receiveMessage", (m essage) => {
-  //     setMessages((prev) => [...prev, message]);
-  //   });
-  //   return () => socket.off("receiveMessage");
-  // }, []);
-
   const handleSend = async (text) => {
-    // console.log(selectedUser, "text--------");
+    console.log(selectedUser, "text--------");
     if (!selectedUser) return;
     const res = await axios.post(
       `http://localhost:5000/ReachNex/message/send/${selectedUser._id}`,
@@ -94,18 +95,18 @@ const Messaging = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex w-full h-screen overflow-hidden bg-gray-100">
       <ChatList
         users={users}
         selectedUser={selectedUser}
         setSelectedUser={setSelectedUser}
       />
-      <div className="flex flex-col flex-1">
-        <div className="flex-1 overflow-y-auto p-4 bg-white h-full">
+      {/* <div className="flex flex-col flex-1">
+        <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
           <ChatBox messages={messages} currentUserId={currentUserId} />
         </div>
         <MessageInput onSend={handleSend} />
-      </div>
+      </div> */}
     </div>
   );
 };

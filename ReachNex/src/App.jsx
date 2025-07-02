@@ -14,6 +14,7 @@ import MyNetwork from "./Pages/MyNetwork/Network";
 import Jobs from "./Pages/Jobs/Jobs";
 import Feed from "./components/Feed/Feed";
 import Messaging from "./Pages/Messaging/Messaging";
+import ChatDetail from "./Pages/Messaging/ChatDetail";
 import Notification from "./Pages/Notifications/Notification";
 import Profile from "./Pages/Profile/Profile";
 import Post from "./Pages/Home/Post/Post";
@@ -30,13 +31,14 @@ function App() {
           <Route path="/forgetpassword" element={<ForgetPassword />} />
           <Route path="/verifyforgetotp" element={<VerifyForgetOtp />} />
           <Route path="/changepassword" element={<ChangePassword />} />
-
+          
           {/* Protected Routes */}
           <Route element={<Feed />}>
             <Route path="/feed" element={<Home />} />
             <Route path="/network" element={<MyNetwork />} />
             <Route path="/jobs" element={<Jobs />} />
             <Route path="/messaging" element={<Messaging />} />
+            <Route path="/message/:id" element={<ChatDetail />} />
             <Route path="/notifications" element={<Notification />} />
             <Route path="/profile/:id" element={<Profile />} />
             <Route path="/post" element={<Post />} />

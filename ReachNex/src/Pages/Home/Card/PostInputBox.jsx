@@ -7,7 +7,7 @@ import VideocamIcon from "@mui/icons-material/Videocam";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import ArticleIcon from "@mui/icons-material/Article";
 import axios from "axios";
-import socket from "../socket";
+import socket from "../Socket";
 
 const PostInputBox = () => {
   const { user } = useContext(AuthenticationContext);
