@@ -1,0 +1,121 @@
+/* NetworkPage.css */
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f3f2ef;
+}
+
+.network-layout {
+  display: flex;
+  padding: 40px 5%;
+  gap: 40px;
+}
+
+/* Sidebar */
+.network-sidebar {
+  flex: 0 0 240px;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  height: fit-content;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.08);
+}
+
+.network-sidebar h3 {
+  font-size: 16px;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.network-sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.network-sidebar li {
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+  color: #444;
+  cursor: pointer;
+}
+
+.network-sidebar li:hover {
+  color: #0a66c2;
+}
+
+/* Main Section */
+.network-main {
+  flex: 1;
+}
+
+.network-main h2 {
+  font-size: 22px;
+  margin-bottom: 20px;
+  color: #222;
+}
+
+/* Grid of suggestion cards */
+.suggestion-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+/* Card */
+.suggestion-card {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.2s ease;
+}
+
+.suggestion-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.suggestion-card img {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.suggestion-card h4 {
+  font-size: 16px;
+  margin: 6px 0;
+  color: #222;
+}
+
+.suggestion-card p {
+  font-size: 14px;
+  color: #555;
+  margin: 0;
+}
+
+.suggestion-card span {
+  font-size: 12px;
+  color: #888;
+  display: block;
+  margin-top: 6px;
+  margin-bottom: 12px;
+}
+
+.suggestion-card button {
+  padding: 6px 14px;
+  background-color: #0a66c2;
+  color: white;
+  font-size: 14px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.suggestion-card button:hover {
+  background-color: #004182;
+}

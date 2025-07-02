@@ -171,7 +171,8 @@ const PostInputBox = () => {
                   }
                   alt="User"
                 />
-                <h4>{post.userId?.username || "User"}</h4>
+                <h4>{post.userId?.fullName || "User"}</h4>
+
               </div>
               <p>{post.caption}</p>
               {post.mediaUrl &&
@@ -249,7 +250,8 @@ const PostInputBox = () => {
                               borderRadius: "50%",
                             }}
                           />
-                          <strong>{cmt.userId?.username || "User"}</strong>
+                          <strong>{cmt.userId?.fullName || "User"}</strong>
+
                         </div>
                         <p style={{ marginLeft: 42 }}>{cmt.text}</p>
 
@@ -276,7 +278,8 @@ const PostInputBox = () => {
                                   alt="reply-user"
                                 />
                                 <strong>
-                                  {reply.userId?.username || "User"}
+                                  <strong>{reply.userId?.fullName || "User"}</strong>
+
                                 </strong>
                               </div>
                               <p style={{ marginLeft: 36 }}>{reply.text}</p>

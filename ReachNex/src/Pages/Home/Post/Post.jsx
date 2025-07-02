@@ -72,7 +72,7 @@ const Post = () => {
           alt="profile"
           style={styles.avatar}
         />
-        <h3>{user?.username || "User"}</h3>
+        <h3>{user?.fullName || "User"}</h3>
       </div>
 
       {/* Add Description */}
