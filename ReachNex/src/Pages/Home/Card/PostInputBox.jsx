@@ -85,7 +85,6 @@ const PostInputBox = () => {
   };
 
   const handleLike = async (postId) => {
-    if (!user || !user.id) return alert("User not found");
     try {
       await axios.post("http://localhost:5000/ReachNex/likePost", {
         postId,
@@ -150,7 +149,7 @@ const PostInputBox = () => {
           <img
             className={style.profilePic}
             src={
-              user?.profilePic ||
+              user?.profilePicture ||
               "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"
             }
             alt="Profile"
@@ -218,32 +217,6 @@ const PostInputBox = () => {
 
               {openCommentBox === post._id && (
                 <div className={style.commentBox}>
-                  <div className={style.commentBoxHeader}>
-                    <input
-                      type="text"
-                      placeholder="Write a comment..."
-                      value={commentInputs[post._id] || ""}
-                      onChange={(e) =>
-                        setCommentInputs((prev) => ({
-                          ...prev,
-                          [post._id]: e.target.value,
-                        }))
-                      }
-                      className={style.commentInput}
-                    />
-                    <button
-                      onClick={() => setOpenCommentBox(null)}
-                      className={style.closeBtn}
-                    >
-                      ❌
-                    </button>
-                    <button
-                      onClick={() => handleComment(post._id)}
-                      className={style.commentBtn}
-                    >
-                      Post
-                    </button>
-                  </div>
                   <div className={style.commentBoxHeader}>
                     <input
                       type="text"
