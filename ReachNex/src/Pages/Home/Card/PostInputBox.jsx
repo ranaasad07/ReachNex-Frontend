@@ -16,7 +16,7 @@ const PostInputBox = () => {
   const [openCommentBox, setOpenCommentBox] = useState(null);
   const [commentInputs, setCommentInputs] = useState({});
   const [replyInputs, setReplyInputs] = useState({});
-  const [replyInputs, setReplyInputs] = useState({});
+  // const [replyInputs, setReplyInputs] = useState({});
 
   useEffect(() => {
     fetchPosts();
@@ -125,12 +125,15 @@ const PostInputBox = () => {
     if (!replyText) return;
 
     try {
-      const res = await axios.post("http://localhost:5000/ReachNex/replyComment", {
-        postId,
-        commentId,
-        userId: user.id || user._id,
-        text: replyText,
-      });
+      const res = await axios.post(
+        "http://localhost:5000/ReachNex/replyComment",
+        {
+          postId,
+          commentId,
+          userId: user.id || user._id,
+          text: replyText,
+        }
+      );
 
       if (res.status === 200) {
         setReplyInputs((prev) => ({ ...prev, [commentId]: "" }));
@@ -146,7 +149,10 @@ const PostInputBox = () => {
         <div className={style.postContainer}>
           <img
             className={style.profilePic}
-            src={user?.profilePic || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"}
+            src={
+              user?.profilePic ||
+              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"
+            }
             alt="Profile"
           />
           <button
@@ -184,7 +190,6 @@ const PostInputBox = () => {
                   alt="User"
                 />
                 <h4>{post.userId?.fullName || "User"}</h4>
-
               </div>
               <p>{post.caption}</p>
               {post.mediaUrl &&
@@ -269,9 +274,18 @@ const PostInputBox = () => {
                   <div className={style.commentList}>
                     {post.comments?.map((cmt, i) => (
                       <div key={i} className={style.commentItem}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 10,
+                          }}
+                        >
                           <img
-                            src={cmt.userId?.profilePicture || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"}
+                            src={
+                              cmt.userId?.profilePicture ||
+                              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"
+                            }
                             alt="user"
                             style={{
                               width: 32,
@@ -280,20 +294,34 @@ const PostInputBox = () => {
                             }}
                           />
                           <strong>{cmt.userId?.fullName || "User"}</strong>
-
                         </div>
                         <p style={{ marginLeft: 42 }}>{cmt.text}</p>
 
                         <div className={style.replySection}>
                           {cmt.replies?.map((reply, rIdx) => (
                             <div key={rIdx} style={{ marginLeft: 52 }}>
-                              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: 8,
+                                }}
+                              >
                                 <img
-                                  src={reply.userId?.profilePicture || "https://i.pravatar.cc/30"}
-                                  style={{ width: 28, height: 28, borderRadius: "50%" }}
+                                  src={
+                                    reply.userId?.profilePicture ||
+                                    "https://i.pravatar.cc/30"
+                                  }
+                                  style={{
+                                    width: 28,
+                                    height: 28,
+                                    borderRadius: "50%",
+                                  }}
                                   alt="reply-user"
                                 />
-                                <strong>{reply.userId?.username || "User"}</strong>
+                                <strong>
+                                  {reply.userId?.username || "User"}
+                                </strong>
                               </div>
                               <p style={{ marginLeft: 36 }}>{reply.text}</p>
                             </div>
@@ -328,7 +356,9 @@ const PostInputBox = () => {
             </div>
           ))
         ) : (
-          <p style={{ textAlign: "center", marginTop: "10px" }}>No posts found</p>
+          <p style={{ textAlign: "center", marginTop: "10px" }}>
+            No posts found
+          </p>
         )}
       </div>
     </>
@@ -336,7 +366,5 @@ const PostInputBox = () => {
 };
 
 export default PostInputBox;
-
-
 
 // this is for testing
