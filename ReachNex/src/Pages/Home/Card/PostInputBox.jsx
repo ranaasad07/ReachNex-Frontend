@@ -18,60 +18,52 @@ const PostInputBox = () => {
   const [replyInputs, setReplyInputs] = useState({});
   // const [replyInputs, setReplyInputs] = useState({});
 
-  useEffect(() => {
-    fetchPosts();
+ useEffect(() => {
+  fetchPosts();
 
-    socket.on("likeUpdated", ({ postId, likes }) => {
-      setPosts((prev) =>
-        prev.map((post) => (post._id === postId ? { ...post, likes } : post))
-      );
-    });
+  // LIKE listener
+  socket.on("likeUpdated", ({ postId, likes }) => {
+    setPosts((prev) =>
+      prev.map((post) =>
+        post._id === postId ? { ...post, likes } : post
+      )
+    );
+  });
 
-    socket.on("commentAdded", ({ postId, comment }) => {
-      setPosts((prev) =>
-        prev.map((post) =>
-          post._id === postId
-            ? { ...post, comments: [...(post.comments || []), comment] }
-            : post
-        )
-      );
-    });
+  // COMMENT listener
+  socket.on("commentAdded", ({ postId, comment }) => {
+    setPosts((prev) =>
+      prev.map((post) =>
+        post._id === postId
+          ? { ...post, comments: [...(post.comments || []), comment] }
+          : post
+      )
+    );
+  });
 
-    socket.on("replyAdded", ({ postId, commentId, reply }) => {
-      setPosts((prev) =>
-        prev.map((post) => {
-          if (post._id !== postId) return post;
-          const updatedComments = post.comments.map((cmt) =>
-            cmt._id === commentId
-              ? { ...cmt, replies: [...(cmt.replies || []), reply] }
-              : cmt
-          );
-          return { ...post, comments: updatedComments };
-        })
-      );
-    });
+  // REPLY listener — ✅ only once
+  socket.on("replyAdded", ({ postId, commentId, reply }) => {
+    setPosts((prev) =>
+      prev.map((post) => {
+        if (post._id !== postId) return post;
+        const updatedComments = post.comments.map((cmt) =>
+          cmt._id === commentId
+            ? { ...cmt, replies: [...(cmt.replies || []), reply] }
+            : cmt
+        );
+        return { ...post, comments: updatedComments };
+      })
+    );
+  });
 
-    socket.on("replyAdded", ({ postId, commentId, reply }) => {
-      setPosts((prev) =>
-        prev.map((post) => {
-          if (post._id !== postId) return post;
-          const updatedComments = post.comments.map((cmt) =>
-            cmt._id === commentId
-              ? { ...cmt, replies: [...(cmt.replies || []), reply] }
-              : cmt
-          );
-          return { ...post, comments: updatedComments };
-        })
-      );
-    });
+  // Cleanup function — ✅ removes each listener only once
+  return () => {
+    socket.off("likeUpdated");
+    socket.off("commentAdded");
+    socket.off("replyAdded");
+  };
+}, []);
 
-    return () => {
-      socket.off("likeUpdated");
-      socket.off("commentAdded");
-      socket.off("replyAdded");
-      socket.off("replyAdded");
-    };
-  }, []);
 
   const fetchPosts = async () => {
     try {
@@ -293,7 +285,7 @@ const PostInputBox = () => {
                                   alt="reply-user"
                                 />
                                 <strong>
-                                  {reply.userId?.username || "User"}
+                                  {reply.userId?.fullName || "User"}
                                 </strong>
                               </div>
                               <p style={{ marginLeft: 36 }}>{reply.text}</p>
