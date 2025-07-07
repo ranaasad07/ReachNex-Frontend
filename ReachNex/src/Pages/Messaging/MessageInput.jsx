@@ -22,7 +22,7 @@ const MessageInput = ({ onSend }) => {
   />
   <button
     type="submit"
-    className="bg-blue-600 text-white px-5 py-2 rounded-full hover:bg-blue-700 transition text-sm"
+    className="bg-blue-600 text-black px-5 py-2 rounded-full hover:bg-blue-700 transition text-sm"
   >
     Send
   </button>

@@ -4,10 +4,10 @@ import axios from "axios";
 import AuthenticationContext from "../../components/Contexts/AuthenticationContext/AuthenticationContext";
 import MessageInput from "./MessageInput";
 import socket from "../../socket";
-
+import style from "./ChatDetail.module.css";
 
 const ChatDetail = () => {
-  const { id } = useParams(); // selected user ID
+  const { id } = useParams();
   const { user } = useContext(AuthenticationContext);
   const [messages, setMessages] = useState([]);
   const [receiver, setReceiver] = useState(null);
@@ -15,24 +15,26 @@ const ChatDetail = () => {
 
   const currentUserId = user?._id;
 
+  // Fetch Receiver Info
   useEffect(() => {
     const fetchReceiver = async () => {
       const res = await axios.get(
         `http://localhost:5000/ReachNex/getuser/${id}`
       );
-      setReceiver(res.data);
+      setReceiver(res.data.user);
     };
     fetchReceiver();
   }, [id]);
 
-    useEffect(() => {
+  // Socket: Receive Message
+  useEffect(() => {
     socket.on("receiveMessage", (message) => {
       setMessages((prev) => [...prev, message]);
     });
     return () => socket.off("receiveMessage");
   }, []);
 
-
+  // Fetch Chat Messages
   useEffect(() => {
     if (id && currentUserId) {
       axios
@@ -44,6 +46,7 @@ const ChatDetail = () => {
     }
   }, [id]);
 
+  // Send Message
   const handleSend = async (text) => {
     const res = await axios.post(
       `http://localhost:5000/ReachNex/message/send/${id}`,
@@ -55,43 +58,69 @@ const ChatDetail = () => {
         },
       }
     );
-//       socket.emit("sendMessage", {
-//     ...res.data,
-//     receiverId: id,
-//   });
-    // console.log("=-=-=-",JSON.stringify(messages))
-    // console.log("=-=-=sxsss-",JSON.stringify(res.data))
+
+    socket.emit("sendMessage", {
+      ...res.data,
+      receiverId: id,
+    });
+
     setMessages((prev) => [...prev, res.data]);
   };
 
+  // Auto-scroll
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
-
+  console.log(receiver, "receiver============");
   return (
-    <div className="flex flex-col h-screen">
-      <div className="p-4 bg-white border-b shadow">
-        <h2 className="text-xl font-semibold">{receiver?.fullName}</h2>
+    <div className={style.chatContainer}>
+      {/* Chat Header */}
+      <div className={style.chatHeader}>
+        <div className={style.headerContent}>
+          <img
+            src={
+              receiver?.profilePicture ||
+              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"
+            }
+            alt="receiver"
+            className={style.userimg}
+          />
+          <div>
+            <h2 className={style.userName}>
+              {receiver?.fullName || "Loading..."}
+            </h2>
+            <p className={style.onlineText}>Online</p>
+          </div>
+        </div>
       </div>
-      <div className="flex-1 overflow-y-auto px-6 py-4 bg-gray-100">
-        {messages.map((msg, index) => {
-          const isMine = msg.senderId === currentUserId;
-          return (
-            <div
-              key={index}
-              className={`max-w-[70%] px-4 py-2 rounded-2xl shadow text-sm mb-3 ${
-                isMine
-                  ? "ml-auto bg-blue-500 text-white rounded-br-none"
-                  : "mr-auto bg-white text-gray-900 rounded-bl-none"
-              }`}
-            >
-              {msg.text}
-            </div>
-          );
-        })}
-        <div ref={bottomRef}></div>
+
+      {/* Messages Area */}
+      <div className={style.messageArea}>
+        <div className={style.messageBox}>
+          {messages.map((msg, index) => {
+            const isMine = msg.senderId === currentUserId;
+            return (
+              <div
+                key={index}
+                className={isMine ? style.myMessage : style.theirMessage}
+              >
+                <p>{msg.text}</p>
+                <p className={style.timeText}>
+                  {new Date(msg.createdAt).toLocaleTimeString()}
+                </p>
+              </div>
+            );
+          })}
+          <div ref={bottomRef}></div>
+        </div>
       </div>
-      <MessageInput onSend={handleSend} />
+
+      {/* Input Box */}
+      <div className={style.inputContainer}>
+        <div className={style.inputBox}>
+          <MessageInput onSend={handleSend} />
+        </div>
+      </div>
     </div>
   );
 };
