@@ -1,3 +1,146 @@
+
+// // 📁 src/Pages/Messaging/ChatDetail.jsx
+// import React, { useContext, useEffect, useState, useRef } from "react";
+// import { useParams } from "react-router-dom";
+// import axios from "axios";
+// import AuthenticationContext from "../../components/Contexts/AuthenticationContext/AuthenticationContext";
+// import MessageInput from "./MessageInput";
+// import socket from "../../socket";
+// import style from "./ChatDetail.module.css";
+
+// const ChatDetail = () => {
+//   const { id: receiverId } = useParams();
+//   const { user } = useContext(AuthenticationContext);
+//   const [messages, setMessages] = useState([]);
+//   const [receiver, setReceiver] = useState(null);
+//   const [conversationId, setConversationId] = useState(null);
+//   const bottomRef = useRef();
+//   const currentUserId = user?._id;
+
+//   // ✅ Fetch conversation and join room
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       try {
+//         const receiverRes = await axios.get(`http://localhost:5000/ReachNex/getuser/${receiverId}`);
+//         setReceiver(receiverRes.data.user);
+
+//         const convoRes = await axios.post(`http://localhost:5000/ReachNex/conversations`, {
+//           receiverId
+//         }, {
+//           headers: { userid: currentUserId }
+//         });
+
+//         const convId = convoRes.data._id;
+//         setConversationId(convId);
+
+//         const msgRes = await axios.get(`http://localhost:5000/ReachNex/getmessages/${convId}`);
+//         setMessages(msgRes.data);
+
+//         socket.emit("joinRoom", convId);
+//       } catch (err) {
+//         console.error("Fetch Error:", err.message);
+//       }
+//     };
+
+//     if (currentUserId && receiverId) {
+//       fetchData();
+//     }
+
+//     return () => {
+//       socket.emit("leaveRoom", conversationId);
+//     };
+//   }, [receiverId, currentUserId]);
+
+//   // ✅ Real-time receive messages
+//   useEffect(() => {
+//     const handleMessage = (message) => {
+//       if (message.conversation === conversationId) {
+//         setMessages((prev) => [...prev, message]);
+//       }
+//     };
+
+//     socket.on("receiveMessage", handleMessage);
+//     return () => socket.off("receiveMessage", handleMessage);
+//   }, [conversationId]);
+
+//   useEffect(() => {
+//     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+//   }, [messages]);
+
+//   // ✅ Send message
+//   const handleSend = async (text) => {
+//     try {
+//       const res = await axios.post(`http://localhost:5000/ReachNex/messages`, {
+//         text
+//       }, {
+//         headers: {
+//           senderid: currentUserId,
+//           receiverid: receiverId,
+//           conversationid: conversationId
+//         }
+//       });
+
+//       const newMsg = res.data;
+//       socket.emit("sendMessage", { ...newMsg, receiverId });
+//       setMessages((prev) => [...prev, newMsg]);
+//     } catch (err) {
+//       console.error("Send Error:", err.message);
+//     }
+//   };
+
+//   return (
+//     <div className={style.chatContainer}>
+//       {/* Header */}
+//       <div className={style.chatHeader}>
+//         <div className={style.headerContent}>
+//           <img
+//             src={receiver?.profilePicture || "https://i.pravatar.cc/150?img=56"}
+//             alt="profile"
+//             className={style.userimg}
+//           />
+//           <div>
+//             <h2 className={style.userName}>{receiver?.fullName || "Loading..."}</h2>
+//             <p className={style.onlineText}>Online</p>
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* Body */}
+//       <div className={style.messageArea}>
+//         <div className={style.messageBox}>
+//           {messages.map((msg, i) => {
+//             const isMine = msg.senderId === currentUserId || msg.senderId?._id === currentUserId;
+//             return (
+//               <div key={i} className={isMine ? style.myMessage : style.theirMessage}>
+//                 <p>{msg.text}</p>
+//                 <p className={style.timeText}>
+//                   {new Date(msg.createdAt).toLocaleTimeString()}
+//                 </p>
+//               </div>
+//             );
+//           })}
+//           <div ref={bottomRef}></div>
+//         </div>
+//       </div>
+
+//       {/* Input */}
+//       <div className={style.inputContainer}>
+//         <div className={style.inputBox}>
+//           <MessageInput onSend={handleSend} />
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default ChatDetail;
+
+
+
+
+
+
+
 import React, { useContext, useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -7,101 +150,108 @@ import socket from "../../socket";
 import style from "./ChatDetail.module.css";
 
 const ChatDetail = () => {
-  const { id } = useParams();
+  const { id: receiverId } = useParams();
   const { user } = useContext(AuthenticationContext);
   const [messages, setMessages] = useState([]);
   const [receiver, setReceiver] = useState(null);
+  const [conversationId, setConversationId] = useState(null);
   const bottomRef = useRef();
-
   const currentUserId = user?._id;
 
-  // Fetch Receiver Info
   useEffect(() => {
-    const fetchReceiver = async () => {
-      const res = await axios.get(
-        `http://localhost:5000/ReachNex/getuser/${id}`
-      );
-      setReceiver(res.data.user);
-    };
-    fetchReceiver();
-  }, [id]);
+    const fetchData = async () => {
+      try {
+        const receiverRes = await axios.get(`http://localhost:5000/ReachNex/getuser/${receiverId}`);
+        setReceiver(receiverRes.data.user);
 
-  // Socket: Receive Message
-  useEffect(() => {
-    socket.on("receiveMessage", (message) => {
-      setMessages((prev) => [...prev, message]);
-    });
-    return () => socket.off("receiveMessage");
-  }, []);
+        const convoRes = await axios.post(`http://localhost:5000/ReachNex/conversations`, {
+          receiverId
+        }, {
+          headers: { userid: currentUserId }
+        });
 
-  // Fetch Chat Messages
-  useEffect(() => {
-    if (id && currentUserId) {
-      axios
-        .get(`http://localhost:5000/ReachNex/message/${id}`, {
-          withCredentials: true,
-          headers: { userid: currentUserId },
-        })
-        .then((res) => setMessages(res.data));
-    }
-  }, [id]);
+        const convId = convoRes.data._id;
+        setConversationId(convId);
 
-  // Send Message
-  const handleSend = async (text) => {
-    const res = await axios.post(
-      `http://localhost:5000/ReachNex/message/send/${id}`,
-      { text },
-      {
-        withCredentials: true,
-        headers: {
-          userid: currentUserId,
-        },
+        const msgRes = await axios.get(`http://localhost:5000/ReachNex/getmessages/${convId}`);
+        setMessages(msgRes.data);
+
+        socket.emit("joinRoom", convId);
+      } catch (err) {
+        console.error("Error fetching chat data:", err.message);
       }
-    );
+    };
 
-    socket.emit("sendMessage", {
-      ...res.data,
-      receiverId: id,
-    });
+    if (currentUserId && receiverId) {
+      fetchData();
+    }
 
-    setMessages((prev) => [...prev, res.data]);
-  };
+    return () => {
+      socket.emit("leaveRoom", conversationId);
+    };
+  }, [receiverId, currentUserId]);
 
-  // Auto-scroll
+  // 👇 only append if message not already in list
+  useEffect(() => {
+    const handler = (message) => {
+      if (message.conversation === conversationId) {
+        setMessages((prev) => {
+          const alreadyExists = prev.some((msg) => msg._id === message._id);
+          return alreadyExists ? prev : [...prev, message];
+        });
+      }
+    };
+
+    socket.on("receiveMessage", handler);
+    return () => socket.off("receiveMessage", handler);
+  }, [conversationId]);
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
-  console.log(receiver, "receiver============");
+
+  const handleSend = async (text) => {
+    try {
+      const res = await axios.post(`http://localhost:5000/ReachNex/messages`,
+        { text },
+        {
+          headers: {
+            senderid: currentUserId,
+            receiverid: receiverId,
+            conversationid: conversationId
+          }
+        });
+
+      // 👇 don't setMessages here — real-time socket will handle it
+      socket.emit("sendMessage", { ...res.data, receiverId });
+    } catch (err) {
+      console.error("Send error:", err.message);
+    }
+  };
+
   return (
     <div className={style.chatContainer}>
-      {/* Chat Header */}
       <div className={style.chatHeader}>
         <div className={style.headerContent}>
           <img
-            src={
-              receiver?.profilePicture ||
-              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"
-            }
-            alt="receiver"
+            src={receiver?.profilePicture || "https://i.pravatar.cc/150?img=56"}
+            alt="profile"
             className={style.userimg}
           />
           <div>
-            <h2 className={style.userName}>
-              {receiver?.fullName || "Loading..."}
-            </h2>
+            <h2 className={style.userName}>{receiver?.fullName || "Loading..."}</h2>
             <p className={style.onlineText}>Online</p>
           </div>
         </div>
       </div>
 
-      {/* Messages Area */}
       <div className={style.messageArea}>
         <div className={style.messageBox}>
           {messages.map((msg, index) => {
-            const isMine = msg.senderId === currentUserId;
+            const isMine = msg.senderId === currentUserId || msg.senderId?._id === currentUserId;
             return (
               <div
-                key={index}
+                key={msg._id}
                 className={isMine ? style.myMessage : style.theirMessage}
               >
                 <p>{msg.text}</p>
@@ -115,7 +265,6 @@ const ChatDetail = () => {
         </div>
       </div>
 
-      {/* Input Box */}
       <div className={style.inputContainer}>
         <div className={style.inputBox}>
           <MessageInput onSend={handleSend} />

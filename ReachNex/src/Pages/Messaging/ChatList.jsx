@@ -4,55 +4,61 @@ const ChatList = ({ users, selectedUser, setSelectedUser }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="w-72 bg-white border-r border-gray-200 shadow-sm overflow-y-auto">
-      <h2 className="text-xl font-semibold px-4 py-3 border-b border-gray-200 text-gray-700">
-        Online Users
+    <div className="w-80 bg-white border-r border-gray-200 overflow-y-auto h-full">
+      <h2 className="text-lg font-semibold px-4 py-3 border-b border-gray-200 text-gray-800">
+        Messaging
       </h2>
 
       {users.map((user) => {
         const isSelected = selectedUser?._id === user._id;
-        const hasUnread = user.hasUnread; // 👈 yeh backend se aana chahiye
 
         return (
           <div
             key={user._id}
             onClick={() => {
               setSelectedUser(user);
-              navigate(`/message/${user._id}`);
+              navigate(`/messaging/${user._id}`);
             }}
-            className={`flex items-center justify-between gap-3 px-4 py-3 cursor-pointer transition rounded-xl mx-2 my-1 ${
-              isSelected
-                ? "bg-blue-600 text-white"
-                : "hover:bg-gray-100 text-gray-800"
-            }`}
+            className={`flex items-start gap-3 px-4 py-3 cursor-pointer ${
+              isSelected ? "bg-blue-50" : "hover:bg-gray-50"
+            } border-b border-gray-100`}
           >
-            <div className="flex items-center gap-3">
-              <div className="relative">
-                <img
-                  src={
-                    user.profilePicture ||
-                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"
-                  }
-                  alt="profile"
-                  className="w-10 h-10 rounded-full object-cover border border-gray-300"
-                  onError={(e) => {
-                    e.target.src =
-                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s";
-                  }}
-                  width={100}
-                  height={100}
-                />
-                <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-white rounded-full" />
-              </div>
-              <div className="flex flex-col">
-                <p className="font-semibold text-sm">{user.fullName}</p>
-                <p className="text-xs text-green-600">Online</p>
-              </div>
+            {/* Profile Image */}
+            <div className="relative flex-shrink-0">
+              <img
+                src={
+                  user.profilePicture ||
+                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"
+                }
+                alt="profile"
+                className="w-10 h-10 rounded-full object-cover"
+                width={100}
+                height={100}
+              />
+              {/* Online Dot - removed since not shown in image */}
             </div>
 
-            {hasUnread && (
-              <span className="w-2 h-2 bg-red-500 rounded-full"></span>
-            )}
+            {/* Text Content */}
+            <div className="flex-1 min-w-0">
+              <div className="flex justify-between items-baseline">
+                <h3 className="font-medium text-sm text-gray-900 truncate">
+                  {user.fullName || "Unknown User"}
+                </h3>
+                <span className="text-xs text-gray-400 ml-2 whitespace-nowrap">
+                  {user.lastActive || "12:38 pm"}
+                </span>
+              </div>
+              <p className="text-xs text-gray-500 truncate mt-1">
+                {user.lastMessage || "You are now connected"}
+              </p>
+              {user.senderName && (
+                <span className="text-xs text-gray-500">
+                  {user.senderName}:{" "}
+                </span>
+              )}
+            </div>
+
+            {/* Unread Badge - removed since not shown in image */}
           </div>
         );
       })}
