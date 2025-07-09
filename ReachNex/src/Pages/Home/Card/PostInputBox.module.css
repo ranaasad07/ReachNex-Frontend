@@ -201,3 +201,13 @@
 .replySection button:hover {
   background-color: #004182;
 }
+
+
+/* PostInputBox.module.css */
+.linkWrap {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
