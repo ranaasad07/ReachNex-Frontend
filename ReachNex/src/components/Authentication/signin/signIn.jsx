@@ -1,15 +1,77 @@
 import styles from "./signIn.module.css";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { Link } from "react-router-dom";
 import AuthenticationContext from "../../../components/Contexts/AuthenticationContext/AuthenticationContext";
+// import { useNavigate } from "react-router-dom";
+// import { useState } from "react";
 
 const SignInForm = () => {
+
+  
   const [formData, setFormData] = useState({ email: "", password: "" });
   const navigate = useNavigate();
   const { setUser } = useContext(AuthenticationContext); // ✅
+
+  // const navigate = useNavigate();
+  // const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const tokenforlocalstorage = localStorage.getItem("token");
+    console.log(tokenforlocalstorage, "mmmmmmmmmmmmmmmmmmmmmmmmmmmm");
+
+    if (!tokenforlocalstorage) {
+      // No token, redirect to login
+      // navigate("/");
+      return;
+    }
+
+    let decoded;
+    try {
+      decoded = jwtDecode(tokenforlocalstorage);
+    } catch (err) {
+      console.log("Invalid token:", err);
+      // navigate("/");
+      
+      return;
+    }
+
+    const { username, fullname, email, id } = decoded;
+    console.log(id, "tttttttttt");
+
+    if (!id) {
+      // navigate("/");
+      return;
+    }
+
+    // Verify user by ID on backend
+    const verifyUser = async () => {
+      try {
+        const res = await axios.post(
+          "http://localhost:5000/reachnex/verifyloginuser",
+          { id }
+        );
+
+        // Assuming res.data.findUser contains user info
+        setUser(res.data.findUser);
+        alert("already loged In")
+        navigate("/feed")
+      } catch (err) {
+        console.log(err);
+        console.log("Invalid credentials");
+        return
+        // navigate("/");
+      }
+    };
+
+    verifyUser();
+  }, [navigate]);
+
+
+
+
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
