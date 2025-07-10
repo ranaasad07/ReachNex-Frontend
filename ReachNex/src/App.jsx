@@ -18,7 +18,6 @@ import ChatDetail from "./Pages/Messaging/ChatDetail";
 import Notification from "./Pages/Notifications/Notification";
 import Profile from "./Pages/Profile/Profile";
 import Post from "./Pages/Home/Post/Post";
-import MessagingPage from "./Pages/Messaging/MessagingPage";
 
 function App() {
   return (
@@ -40,8 +39,6 @@ function App() {
             <Route path="/jobs" element={<Jobs />} />
             <Route path="/messaging" element={<Messaging />} />
             <Route path="/messaging" element={<Messaging />} />
-            {/* <Route path="/messaging/:id?" element={<MessagingPage />} /> */}
-
             <Route path="/messaging/:id" element={<ChatDetail />} />
             <Route path="/notifications" element={<Notification />} />
             <Route path="/profile/:id" element={<Profile />} />
