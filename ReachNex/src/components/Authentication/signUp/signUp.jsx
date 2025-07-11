@@ -1,10 +1,11 @@
 // SignUpForm.jsx
 import styles from './signUp.module.css';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthenticationContext from '../../Contexts/AuthenticationContext/AuthenticationContext';
-
+import { jwtDecode } from 'jwt-decode';
+// jwtDecode
 const SignUpForm = () => {
     const emailContext = useContext(AuthenticationContext);
     console.log(emailContext)
@@ -12,6 +13,60 @@ const SignUpForm = () => {
     const [formData, setFormData] = useState({ email: '', password: '', fullName: '' });
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate()
+
+//  route protect
+    useEffect(() => {
+        const tokenforlocalstorage = localStorage.getItem("token");
+        console.log(tokenforlocalstorage, "mmmmmmmmmmmmmmmmmmmmmmmmmmmm");
+
+        if (!tokenforlocalstorage) {
+            // No token, redirect to login
+            // navigate("/");
+            return;
+        }
+
+        let decoded;
+        try {
+            decoded = jwtDecode(tokenforlocalstorage);
+        } catch (err) {
+            console.log("Invalid token:", err);
+            // navigate("/");
+
+            return;
+        }
+
+        const { username, fullname, email, id } = decoded;
+        console.log(id, "tttttttttt");
+
+        if (!id) {
+            // navigate("/");
+            return;
+        }
+
+        // Verify user by ID on backend
+        const verifyUser = async () => {
+            try {
+                const res = await axios.post(
+                    "http://localhost:5000/reachnex/verifyloginuser",
+                    { id }
+                );
+
+                // Assuming res.data.findUser contains user info
+                // setUser(res.data.findUser);
+                alert(" you need to logout first")
+                navigate("/feed")
+            } catch (err) {
+                console.log(err);
+                console.log("Invalid credentials");
+                return
+                // navigate("/");
+            }
+        };
+
+        verifyUser();
+    }, [navigate]);
+
+
     const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
     // console.log(formData)
     // function generateOTP(){
@@ -21,19 +76,19 @@ const SignUpForm = () => {
     // console.log(code);
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true); 
+        setLoading(true);
 
         try {
             emailContext.emailForOtp = formData.email;
             await axios.post('http://localhost:5000/ReachNex/SignUp', formData);
-                                 
-             
+
+
             setLoading(false);
-            navigate("/Verify");                    
+            navigate("/Verify");
 
         } catch (err) {
             alert(err.response?.data?.message || 'Error registering user');
-            setLoading(false); 
+            setLoading(false);
         }
     };
 
@@ -79,7 +134,7 @@ const SignUpForm = () => {
                         />
                         <label>Password</label>
                     </div>
-                    
+
                     {/* <div className="form-floating mb-3">
                         <input
                             type="text"

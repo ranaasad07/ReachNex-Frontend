@@ -24,6 +24,7 @@ const navigate = useNavigate();
     if (!tokenforlocalstorage) {
       // No token, redirect to login
       navigate("/");
+      alert("you need to login first")
       return;
     }
 
