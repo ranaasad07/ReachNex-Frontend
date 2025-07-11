@@ -13,7 +13,7 @@ const Navbar = () => {
   return (
     <div className={style.Main}>
       <div className={style.logo}>
-        <h2>ReachNex</h2>
+        <h2><Link to='/feed'> ReachNex </Link></h2>
         <input type="text" placeholder='Search' />
       </div>
       <div className={style.icons}>

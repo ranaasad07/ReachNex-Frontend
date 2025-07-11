@@ -1,4 +1,4 @@
-
+  
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthenticationProvider } from "./components/Contexts/AuthenticationContext/AuthenticationContext";
@@ -38,8 +38,7 @@ function App() {
             <Route path="/network" element={<MyNetwork />} />
             <Route path="/jobs" element={<Jobs />} />
             <Route path="/messaging" element={<Messaging />} />
-            <Route path="/messaging" element={<Messaging />} />
-            <Route path="/messaging/:id" element={<ChatDetail />} />
+            {/* <Route path="/messaging/:id" element={<ChatDetail />} /> */}
             <Route path="/notifications" element={<Notification />} />
             <Route path="/profile/:id" element={<Profile />} />
             <Route path="/post" element={<Post />} />

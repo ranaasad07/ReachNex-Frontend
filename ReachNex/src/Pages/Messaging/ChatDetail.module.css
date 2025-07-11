@@ -1,11 +1,10 @@
 .chatContainer {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100%;
+  width: 100%;
   background: #f8f9fa;
   font-family: 'Segoe UI', sans-serif;
-  max-width: 768px;
-  margin: 0 auto;
   border-left: 1px solid #ddd;
   border-right: 1px solid #ddd;
 }

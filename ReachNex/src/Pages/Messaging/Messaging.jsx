@@ -182,24 +182,118 @@
 
 
 
+// import React, { useEffect, useState, useContext } from "react";
+// import ChatList from "./ChatList";
+// import ChatDetail from "./ChatDetail"
+// import axios from "axios";
+// import AuthenticationContext from "../../components/Contexts/AuthenticationContext/AuthenticationContext";
+// import socket from "../../socket";
+
+// const Messaging = () => {
+//   const { user } = useContext(AuthenticationContext);
+//   const currentUserId = user?._id;
+
+//   // ✅ Missing States Added:
+//   const [conversationId, setConversationId] = useState(null); // 👈 Fix 1
+//   const [messages, setMessages] = useState([]); // 👈 Fix 2
+//   const [users, setUsers] = useState([]);
+
+//   useEffect(() => {
+//     if (conversationId) {
+//       socket.emit("joinRoom", conversationId); // ✅ Join specific chat room
+//     }
+
+//     socket.on("receiveMessage", (message) => {
+//       setMessages((prev) => [...prev, message]);
+//     });
+
+//     return () => {
+//       socket.off("receiveMessage");
+//       socket.emit("leaveRoom", conversationId); // optional: leave room on unmount
+//     };
+//   }, [conversationId]);
+
+//   const fetchUsers = async () => {
+//     const res = await axios.get(
+//       "http://localhost:5000/ReachNex/online-users",
+//       {
+//         withCredentials: true,
+//         headers: { userid: currentUserId },
+//       }
+//     );
+//     setUsers(res.data?.users);
+//   };
+
+//   useEffect(() => {
+//     if (currentUserId) {
+//       fetchUsers();
+//     }
+//   }, [currentUserId]);
+
+//   return (
+//     <div className="flex w-full h-screen overflow-hidden bg-gray-100">
+//       <ChatList users={users} selectedUser={null} setSelectedUser={() => {}} />
+//         <ChatDetail/>
+//     </div>
+//   );
+// };
+
+// export default Messaging;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import React, { useEffect, useState, useContext } from "react";
 import ChatList from "./ChatList";
+import ChatDetail from "./ChatDetail";
 import axios from "axios";
 import AuthenticationContext from "../../components/Contexts/AuthenticationContext/AuthenticationContext";
 import socket from "../../socket";
+import "./Messaging.css"; // 👈 custom CSS file
 
 const Messaging = () => {
   const { user } = useContext(AuthenticationContext);
   const currentUserId = user?._id;
 
-  // ✅ Missing States Added:
-  const [conversationId, setConversationId] = useState(null); // 👈 Fix 1
-  const [messages, setMessages] = useState([]); // 👈 Fix 2
+  const [conversationId, setConversationId] = useState(null);
+  const [messages, setMessages] = useState([]);
   const [users, setUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
     if (conversationId) {
-      socket.emit("joinRoom", conversationId); // ✅ Join specific chat room
+      socket.emit("joinRoom", conversationId);
     }
 
     socket.on("receiveMessage", (message) => {
@@ -208,18 +302,15 @@ const Messaging = () => {
 
     return () => {
       socket.off("receiveMessage");
-      socket.emit("leaveRoom", conversationId); // optional: leave room on unmount
+      socket.emit("leaveRoom", conversationId);
     };
   }, [conversationId]);
 
   const fetchUsers = async () => {
-    const res = await axios.get(
-      "http://localhost:5000/ReachNex/online-users",
-      {
-        withCredentials: true,
-        headers: { userid: currentUserId },
-      }
-    );
+    const res = await axios.get("http://localhost:5000/ReachNex/online-users", {
+      withCredentials: true,
+      headers: { userid: currentUserId },
+    });
     setUsers(res.data?.users);
   };
 
@@ -230,8 +321,22 @@ const Messaging = () => {
   }, [currentUserId]);
 
   return (
-    <div className="flex w-full h-screen overflow-hidden bg-gray-100">
-      <ChatList users={users} selectedUser={null} setSelectedUser={() => {}} />
+    <div className="messaging-container">
+      <div className="chat-list-section">
+        <ChatList
+          users={users}
+          selectedUser={selectedUser}
+          setSelectedUser={setSelectedUser}
+        />
+      </div>
+
+      <div className="chat-detail-section">
+        {selectedUser ? (
+          <ChatDetail receiverId={selectedUser._id} />
+        ) : (
+          <div className="empty-chat">Select a chat to start messaging</div>
+        )}
+      </div>
     </div>
   );
 };

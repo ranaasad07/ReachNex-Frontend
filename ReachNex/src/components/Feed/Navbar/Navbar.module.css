@@ -15,8 +15,9 @@
   flex: 1;
 }
 
-.logo h2 {
+.logo h2 a {
   color: #010e15;
+  text-decoration: none;
   margin: 0;
 }
 
