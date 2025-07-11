@@ -280,6 +280,7 @@ import ChatDetail from "./ChatDetail";
 import axios from "axios";
 import AuthenticationContext from "../../components/Contexts/AuthenticationContext/AuthenticationContext";
 import socket from "../../socket";
+import "./Messaging.css"; 
 
 const Messaging = () => {
   const navigate = useNavigate();
