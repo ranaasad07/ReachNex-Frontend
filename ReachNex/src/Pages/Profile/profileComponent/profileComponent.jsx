@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import "./ProfileComponent.css";
 import { FaCamera, FaPen, FaUserAlt } from "react-icons/fa";
 import axios from "axios";
@@ -23,13 +23,21 @@ export default function ProfileComponent() {
   const [perUser, setPerUser] = useState(null);
   const [errorMsg, setErrorMsg] = useState("");
   const [showEditPopup, setShowEditPopup] = useState(false);
-  const [editForm, setEditForm] = useState({ name: "", profession: "", location: "" });
+  const [editForm, setEditForm] = useState({
+    name: "",
+    profession: "",
+    location: "",
+  });
   const id = useAuth();
+  const cloudinaryRef = useRef();
+  const widgetBannerRef = useRef();
+  const widgetAvatarRef = useRef();
 
-  
   const fetchUser = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/ReachNex/getuser/${id.id}`);
+      const response = await axios.get(
+        `http://localhost:5000/ReachNex/getuser/${id.id}`
+      );
       if (!response.data) return alert("Failed to show user");
       setPerUser(response.data.user);
     } catch (error) {
@@ -43,34 +51,63 @@ export default function ProfileComponent() {
 
   if (errorMsg) return <div>{errorMsg}</div>;
 
+  useEffect(() => {
+    cloudinaryRef.current = window.cloudinary;
 
-  const openCloudinaryWidget = (onSuccess) => {
-    let uploadedImageUrl = null;
-    const widget = window.cloudinary.createUploadWidget(
+    // Banner widget
+    widgetBannerRef.current = cloudinaryRef.current.createUploadWidget(
       {
         cloudName: "dlhjpvfik",
         uploadPreset: "image_upload",
-        sources: ["local", "url", "camera"],
-        multiple: false,
-        folder: "profile_uploads",
-        showCompletedButton: true,
-        showUploadMoreButton: false,
-        maxFiles: 1,
       },
-      (error, result) => {
-        if (!error && result.event === "success") {
-          uploadedImageUrl = result.info.secure_url;
-        }
-        if (result.event === "close" && uploadedImageUrl) {
-          onSuccess(uploadedImageUrl);
-        }
-        if (error) {
-          console.error("Cloudinary Error:", error);
+      async function (error, result) {
+        if (!error && result?.event === "success") {
+          try {
+            const { data } = await axios.put(
+              "http://localhost:5000/ReachNex/banner",
+              { image: result.info.secure_url },
+              {
+                headers: {
+                  Authorization: "Bearer " + localStorage.getItem("token"),
+                },
+              }
+            );
+            setUser(data);
+            setPerUser(data);
+          } catch (err) {
+            console.error("Banner update error:", err);
+          }
         }
       }
     );
-    widget.open();
-  };
+
+    // Avatar widget
+    widgetAvatarRef.current = cloudinaryRef.current.createUploadWidget(
+      {
+        cloudName: "dlhjpvfik",
+        uploadPreset: "image_upload",
+      },
+      async function (error, result) {
+        if (!error && result?.event === "success") {
+          try {
+            const { data } = await axios.put(
+              "http://localhost:5000/ReachNex/avatar",
+              { image: result.info.secure_url },
+              {
+                headers: {
+                  Authorization: "Bearer " + localStorage.getItem("token"),
+                },
+              }
+            );
+            setUser(data);
+            setPerUser(data);
+          } catch (err) {
+            console.error("Avatar update error:", err);
+          }
+        }
+      }
+    );
+  }, []);
 
   // ✅ Banner Upload
   const uploadBannerViaWidget = () => {
@@ -86,7 +123,7 @@ export default function ProfileComponent() {
           }
         );
         setUser(data);
-        setPerUser(data); 
+        setPerUser(data);
       } catch (err) {
         console.error("Banner update error:", err);
       }
@@ -135,7 +172,6 @@ export default function ProfileComponent() {
     setShowEditPopup(false);
   };
 
-
   const handleLogout = () => {
     localStorage.removeItem("token");
     setUser(null);
@@ -151,17 +187,33 @@ export default function ProfileComponent() {
           <div className="banner-placeholder" />
         )}
         {!username && (
-          <button className="edit-banner-btn" onClick={uploadBannerViaWidget}>
+          <button
+            className="edit-banner-btn"
+            onClick={() => widgetBannerRef.current.open()}
+          >
             <FaCamera />
           </button>
         )}
-        <div className="profile-pic-wrapper" onClick={() => !username && uploadAvatarViaWidget()}>
+        <div
+          className="profile-pic-wrapper"
+          onClick={() => !username && widgetAvatarRef.current.open()}
+        >
           {perUser?.profilePicture ? (
-            <img src={perUser.profilePicture} alt="Profile" className="profile-img" />
+            <img
+              src={perUser.profilePicture}
+              alt="Profile"
+              className="profile-img"
+            />
           ) : (
-            <div className="profile-img placeholder"><FaUserAlt /></div>
+            <div className="profile-img placeholder">
+              <FaUserAlt />
+            </div>
           )}
-          {!username && <span className="avatar-overlay"><FaCamera /></span>}
+          {!username && (
+            <span className="avatar-overlay">
+              <FaCamera />
+            </span>
+          )}
         </div>
       </div>
 
@@ -193,7 +245,9 @@ export default function ProfileComponent() {
             <button onClick={() => navigate("/jobs")}>Open to</button>
             <button>Share profile</button>
             <button>More</button>
-            <button className="logout" onClick={handleLogout}>Logout</button>
+            <button className="logout" onClick={handleLogout}>
+              Logout
+            </button>
           </div>
         )}
       </div>
@@ -205,19 +259,25 @@ export default function ProfileComponent() {
             type="text"
             placeholder="Name"
             value={editForm.fullName}
-            onChange={(e) => setEditForm({ ...editForm, fullName: e.target.value })}
+            onChange={(e) =>
+              setEditForm({ ...editForm, fullName: e.target.value })
+            }
           />
           <input
             type="text"
             placeholder="Profession"
             value={editForm.profession}
-            onChange={(e) => setEditForm({ ...editForm, profession: e.target.value })}
+            onChange={(e) =>
+              setEditForm({ ...editForm, profession: e.target.value })
+            }
           />
           <input
             type="text"
             placeholder="Location"
             value={editForm.location}
-            onChange={(e) => setEditForm({ ...editForm, location: e.target.value })}
+            onChange={(e) =>
+              setEditForm({ ...editForm, location: e.target.value })
+            }
           />
           <div className="popup-actions">
             <button onClick={handleTextSave}>Save</button>

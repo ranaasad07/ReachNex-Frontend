@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import AuthenticationContext from "../../../components/Contexts/AuthenticationContext/AuthenticationContext";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import axios from "axios";
 
 const Post = () => {
@@ -25,6 +26,7 @@ const Post = () => {
           setMediaUrl(result.info.secure_url);
           console.log("Uploaded:", result.info.secure_url);
         }
+        
       }
     );
   }, []);
@@ -46,13 +48,19 @@ const Post = () => {
         formData
       );
 
-      alert("✅ Post created successfully!");
-
+      // alert("✅ Post created successfully!");
+      toast.success("Post created successfully!", {
+      autoClose: 1000,
+      onClose: () => {
       // Reset
       setDesc("");
       setMediaUrl("");
       setShowTextarea(false);
       navigate("/feed");
+      },
+    });
+
+ 
     } catch (err) {
       alert(err?.response?.data?.message || "❌ Failed to upload post.");
       console.error(err);

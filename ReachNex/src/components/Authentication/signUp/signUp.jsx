@@ -2,6 +2,7 @@
 import styles from './signUp.module.css';
 import React, { useContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import { toast } from "react-toastify";
 import { Link, useNavigate } from 'react-router-dom';
 import AuthenticationContext from '../../Contexts/AuthenticationContext/AuthenticationContext';
 import { jwtDecode } from 'jwt-decode';
@@ -81,14 +82,19 @@ const SignUpForm = () => {
         try {
             emailContext.emailForOtp = formData.email;
             await axios.post('http://localhost:5000/ReachNex/SignUp', formData);
-
-
+                                    
             setLoading(false);
-            navigate("/Verify");
+            toast.success("Account created! Please verify your email 📩", {
+                  autoClose: 1000,
+                  onClose: () => {
+                      navigate("/Verify");                    
+                  },
+                });
 
         } catch (err) {
             alert(err.response?.data?.message || 'Error registering user');
-            setLoading(false);
+            toast.error("Error registering user");
+            setLoading(false); 
         }
     };
 

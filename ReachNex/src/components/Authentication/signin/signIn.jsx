@@ -4,6 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import AuthenticationContext from "../../../components/Contexts/AuthenticationContext/AuthenticationContext";
 // import { useNavigate } from "react-router-dom";
 // import { useState } from "react";
@@ -95,11 +96,13 @@ const SignInForm = () => {
         `http://localhost:5000/ReachNex/getuser/${id}`
       );
       setUser(userProfileRes.data.user);
+      toast.success("User login successfully!")
+        navigate("/feed");
 
-      navigate("/feed");
+
     } catch (err) {
       console.log(err);
-      alert("Invalid credentials");
+      toast.error("Invalid credentials");
     }
   };
 
