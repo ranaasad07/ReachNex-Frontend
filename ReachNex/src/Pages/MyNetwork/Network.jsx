@@ -1,89 +1,84 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './NetworkPage.css';
 import { useNavigate } from 'react-router-dom';
-
-const suggested = [
-  {
-    id: 1,
-    name: "Ali Khan",
-    title: "Frontend Developer",
-    mutuals: "3 mutual connections",
-    image: "https://www.w3schools.com/howto/img_avatar.png",
-  },
-  {
-    id: 2,
-    name: "Sara Ali",
-    title: "Product Manager",
-    mutuals: "2 mutual connections",
-    image: "https://www.w3schools.com/howto/img_avatar2.png",
-  },
-  {
-    id: 3,
-    name: "Zoya Sheikh",
-    title: "UI/UX Designer",
-    mutuals: "5 mutual connections",
-    image: "https://www.w3schools.com/howto/img_avatar2.png",
-  },
-  {
-    id: 4,
-    name: "Hamza Yousaf",
-    title: "Backend Engineer",
-    mutuals: "1 mutual connection",
-    image: "https://www.w3schools.com/howto/img_avatar.png",
-  },
-];
+import axios from 'axios';
+import {jwtDecode} from 'jwt-decode';
 
 const Network = () => {
   const navigate = useNavigate();
+  const [suggested, setSuggested] = useState([]);
 
-     useEffect(() => {
-    const tokenforlocalstorage = localStorage.getItem("token");
-    console.log(tokenforlocalstorage, "mmmmmmmmmmmmmmmmmmmmmmmmmmmm");
+  useEffect(() => {
+    // Step 1: Get token
+    const token = localStorage.getItem("token");
 
-    if (!tokenforlocalstorage) {
-      // No token, redirect to login
-      // navigate("/");
-      alert("you need to login first")
-      navigate("/")
+    // Step 2: Redirect if token missing
+    if (!token) {
+      alert("You need to login first");
+      navigate("/");
       return;
     }
 
+    // Step 3: Decode token
     let decoded;
     try {
-      decoded = jwtDecode(tokenforlocalstorage);
+      decoded = jwtDecode(token);
     } catch (err) {
-      console.log("Invalid token:", err);
-      // navigate("/");
+      console.error("Invalid token");
+      navigate("/");
       return;
     }
 
-    const { username, fullname, email, id } = decoded;
-    console.log(id, "tttttttttt");
-
-    if (!id) {
-      // navigate("/");
-      return;
-    }
-
-    // Verify user by ID on backend
-    const verifyUser = async () => {
+    // Step 4: Fetch suggestions from backend
+    const fetchSuggestions = async () => {
       try {
-        const res = await axios.post(
-          "http://localhost:5000/reachnex/verifyloginuser",
-          { id }
-        );
+        const res = await axios.get("http://localhost:5000/ReachNex/suggestions", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-        // Assuming res.data.findUser contains user info
-        // setUser(res.data.findUser);
+        // Add UI field `requested: false` initially
+        const formatted = res.data.map((user) => ({
+          ...user,
+          requested: false,
+        }));
+
+        setSuggested(formatted);
       } catch (err) {
-        console.log(err);
-        console.log("Invalid credentials");
-        // navigate("/");
+        console.log("Error fetching suggestions:", err);
       }
     };
 
-    verifyUser();
+    fetchSuggestions();
   }, [navigate]);
+
+  // Send connection request
+  const handleConnect = async (receiverId) => {
+    const token = localStorage.getItem("token");
+
+    try {
+      await axios.post(
+        "http://localhost:5000/ReachNex/network/send",
+        { receiverId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // Mark user as "requested" in UI
+      setSuggested((prev) =>
+        prev.map((user) =>
+          user._id === receiverId ? { ...user, requested: true } : user
+        )
+      );
+    } catch (err) {
+      console.error("Error sending connection request:", err);
+    }
+  };
+
   return (
     <div className="network-layout">
       <aside className="network-sidebar">
@@ -101,15 +96,25 @@ const Network = () => {
       <main className="network-main">
         <h2>People you may know</h2>
         <div className="suggestion-grid">
-          {suggested.map((person) => (
-            <div key={person.id} className="suggestion-card">
-              <img src={person.image} alt={person.name} />
-              <h4>{person.name}</h4>
-              <p>{person.title}</p>
-              <span>{person.mutuals}</span>
-              <button>Connect</button>
-            </div>
-          ))}
+          {suggested.length === 0 ? (
+            <p>No suggestions available</p>
+          ) : (
+            suggested.map((person) => (
+              <div key={person._id} className="suggestion-card">
+                <img src={person.avatar} alt={person.name} />
+                <h4>{person.fullName}</h4>
+                {/* <p>{person.profession || "No title yet"}</p> */}
+                <span>{person.email}</span>
+                <br />
+                <button
+                  onClick={() => handleConnect(person._id)}
+                  disabled={person.requested}
+                >
+                  {person.requested ? "Requested" : "Connect"}
+                </button>
+              </div>
+            ))
+          )}
         </div>
       </main>
     </div>
