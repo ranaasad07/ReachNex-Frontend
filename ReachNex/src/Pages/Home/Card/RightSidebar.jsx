@@ -1,59 +1,71 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./RightSidebar.css";
-
-const initialSuggestions = [
-  {
-    name: "HackerRank",
-    description: "Company • Software Development",
-    avatar: "https://ui-avatars.com/api/?name=HackerRank&background=0D8ABC&color=fff",
-    isFollowing: false,
-  },
-  {
-    name: "Technology Brainz",
-    description: "Company • Information Technology & Services",
-    avatar: "https://ui-avatars.com/api/?name=Technology+Brainz&background=0D8ABC&color=fff",
-    isFollowing: false,
-  },
-  {
-    name: "Ayesha Mansha",
-    description: "Co-Founder at Brand ClickX | SEO Expert & Content Strategist | Helping Brands ...",
-    avatar: "https://ui-avatars.com/api/?name=Ayesha+M&background=0D8ABC&color=fff",
-    isFollowing: false,
-  },
-];
+import axios from "axios";
 
 const RightSidebar = () => {
-  const [suggestions, setSuggestions] = useState(initialSuggestions);
+  const [suggestions, setSuggestions] = useState([]);
+  const token = localStorage.getItem("token");
 
-  const handleFollowToggle = (index) => {
-    const updatedSuggestions = [...suggestions];
-    updatedSuggestions[index].isFollowing = !updatedSuggestions[index].isFollowing;
-    setSuggestions(updatedSuggestions);
+  const fetchSuggestions = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/ReachNex/suggestions", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setSuggestions(res.data);
+    } catch (err) {
+      console.error("Error fetching sidebar suggestions:", err);
+    }
   };
+
+  const handleConnect = async (receiverId) => {
+    try {
+      await axios.post(
+        "http://localhost:5000/ReachNex/send",
+        { receiverId },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      // ✅ Remove the connected user from list
+      alert("Connection request sent ✅");
+      
+      setSuggestions((prev) => prev.filter((user) => user._id !== receiverId));
+    } catch (err) {
+      console.error("Error sending connection request:", err);
+    }
+  };
+
+  useEffect(() => {
+    if (token) fetchSuggestions();
+  }, []);
 
   return (
     <div className="rightSidebar">
-      <h4 className="rightSidebar__title">Add to your feed</h4>
+      <h4 className="rightSidebar__title">People you may know</h4>
       <div className="rightSidebar__list">
-        {suggestions.map((item, index) => (
-          <div key={index} className="rightSidebar__item">
-            <img src={item.avatar} alt={item.name} className="rightSidebar__avatar" />
+        {suggestions.map((item) => (
+          <div key={item._id} className="rightSidebar__item">
+            <img
+              src={item.profilePicture || "https://ui-avatars.com/api/?name=User"}
+              alt={item.fullName}
+              className="rightSidebar__avatar"
+            />
             <div className="rightSidebar__info">
-              <p className="rightSidebar__name">{item.name}</p>
-              <p className="rightSidebar__desc">{item.description}</p>
+              <p className="rightSidebar__name">{item.fullName}</p>
+              <p className="rightSidebar__desc">{item.email}</p>
               <button
-                className={`rightSidebar__followBtn ${
-                  item.isFollowing ? "following" : ""
-                }`}
-                onClick={() => handleFollowToggle(index)}
+                className="rightSidebar__followBtn"
+                onClick={() => handleConnect(item._id)}
               >
-                {item.isFollowing ? "Following" : "+ Follow"}
+                Connect
               </button>
             </div>
           </div>
         ))}
       </div>
-      <a href="#" className="rightSidebar__link">View all recommendations →</a>
+      <a href="/network" className="rightSidebar__link">
+        View all recommendations →
+      </a>
     </div>
   );
 };

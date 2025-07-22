@@ -1,99 +1,108 @@
-import React, { useEffect, useState } from 'react';
-import './NetworkPage.css';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import {jwtDecode} from 'jwt-decode';
+import React, { useEffect, useState } from "react";
+import "./NetworkPage.css";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
+import PendingRequests from "./networkComponent/PendingRequest";
+import io from "socket.io-client";
+
+const socket = io("http://localhost:5000");
 
 const Network = () => {
   const navigate = useNavigate();
   const [suggested, setSuggested] = useState([]);
+  const [connectionCount, setConnectionCount] = useState(0);
+  const token = localStorage.getItem("token");
+
+  const fetchConnectionCount = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/ReachNex/user/connections", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setConnectionCount(res.data.count);
+    } catch (err) {
+      console.error("Failed to fetch connection count:", err);
+    }
+  };
+
+  const fetchSuggestions = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/ReachNex/suggestions", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setSuggested(res.data.map((user) => ({ ...user, requested: false })));
+    } catch (err) {
+      console.error("Error fetching suggestions:", err);
+    }
+  };
+
+  const handleConnect = async (receiverId) => {
+    try {
+      await axios.post(
+        "http://localhost:5000/ReachNex/send",
+        { receiverId },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      alert("Connection request sent ✅");
+
+      // ✅ Remove user from suggestions immediately
+      setSuggested((prev) => prev.filter((user) => user._id !== receiverId));
+
+      fetchConnectionCount();
+    } catch (err) {
+      console.error("Error sending connection request:", err);
+    }
+  };
 
   useEffect(() => {
-    // Step 1: Get token
-    const token = localStorage.getItem("token");
-
-    // Step 2: Redirect if token missing
     if (!token) {
       alert("You need to login first");
       navigate("/");
       return;
     }
 
-    // Step 3: Decode token
-    let decoded;
+    let userId = "";
     try {
-      decoded = jwtDecode(token);
+      const decoded = jwtDecode(token);
+      userId = decoded.userId;
+      socket.emit("join", userId); // ✅ Join your own socket room
     } catch (err) {
       console.error("Invalid token");
       navigate("/");
       return;
     }
 
-    // Step 4: Fetch suggestions from backend
-    const fetchSuggestions = async () => {
-      try {
-        const res = await axios.get("http://localhost:5000/ReachNex/suggestions", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        // Add UI field `requested: false` initially
-        const formatted = res.data.map((user) => ({
-          ...user,
-          requested: false,
-        }));
-
-        setSuggested(formatted);
-      } catch (err) {
-        console.log("Error fetching suggestions:", err);
+    // ✅ Listen for real-time connection accept event
+    socket.on("connectionAccepted", ({ receiverId }) => {
+      if (receiverId === userId) {
+        fetchConnectionCount(); // ✅ Real-time update on receiver side
       }
-    };
+    });
 
     fetchSuggestions();
-  }, [navigate]);
+    fetchConnectionCount();
 
-  // Send connection request
-  const handleConnect = async (receiverId) => {
-    const token = localStorage.getItem("token");
-
-    try {
-      await axios.post(
-        "http://localhost:5000/ReachNex/network/send",
-        { receiverId },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      // Mark user as "requested" in UI
-      setSuggested((prev) =>
-        prev.map((user) =>
-          user._id === receiverId ? { ...user, requested: true } : user
-        )
-      );
-    } catch (err) {
-      console.error("Error sending connection request:", err);
-    }
-  };
+    return () => {
+      socket.off("connectionAccepted");
+    };
+  }, []);
 
   return (
     <div className="network-layout">
       <aside className="network-sidebar">
         <h3>Manage my network</h3>
         <ul>
-          <li>Connections</li>
-          <li>Contacts</li>
-          <li>Following & Followers</li>
-          <li>Groups</li>
-          <li>Events</li>
-          <li>Pages</li>
+          <li>Connections ({connectionCount})</li>
         </ul>
       </aside>
 
       <main className="network-main">
+        <PendingRequests
+          onConnectionChange={fetchConnectionCount}
+          refreshSuggestions={fetchSuggestions}
+        />
+
         <h2>People you may know</h2>
         <div className="suggestion-grid">
           {suggested.length === 0 ? (
@@ -101,15 +110,11 @@ const Network = () => {
           ) : (
             suggested.map((person) => (
               <div key={person._id} className="suggestion-card">
-                <img src={person.avatar} alt={person.name} />
+                <img src={person.profilePicture} alt={person.fullName} />
                 <h4>{person.fullName}</h4>
-                {/* <p>{person.profession || "No title yet"}</p> */}
                 <span>{person.email}</span>
                 <br />
-                <button
-                  onClick={() => handleConnect(person._id)}
-                  disabled={person.requested}
-                >
+                <button onClick={() => handleConnect(person._id)}>
                   {person.requested ? "Requested" : "Connect"}
                 </button>
               </div>

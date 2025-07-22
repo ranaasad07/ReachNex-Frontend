@@ -133,12 +133,15 @@ const PostInputBox = () => {
       console.error("Reply Error:", err);
     }
   };
+  const goToProfile = () =>{
+    navigate(`/profile/${user.username}`)
+  }
 
   return (
     <>
       <div className={style.mainContainer}>
         <div className={style.postContainer}>
-          <img
+          <img onClick={goToProfile}
             className={style.profilePic}
             src={
               user?.profilePicture ||
@@ -180,13 +183,14 @@ const PostInputBox = () => {
           posts.map((post) => (
             <div key={post._id} className={style.postCard}>
               <div className={style.postUser}>
-                <img
-                  className={style.postProfile}
-                  src={
-                    post.userId?.profilePicture || "https://i.pravatar.cc/300"
-                  }
-                  alt="User"
-                />
+          <img 
+  onClick={() => navigate(`/profile/${post.userId.username}`)}
+  className={style.postProfile}
+  src={post.userId?.profilePicture || "https://i.pravatar.cc/300"}
+  alt="User"
+/>
+
+
                 <h4>{post.userId?.fullName || "User"}</h4>
               </div>
               <p>{post.caption}</p>
