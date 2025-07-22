@@ -18,6 +18,7 @@ import Messaging from "./Pages/Messaging/Messaging";
 import Notification from "./Pages/Notifications/Notification";
 import Profile from "./Pages/Profile/Profile";
 import Post from "./Pages/Home/Post/Post";
+import UserConnections from "./Pages/MyNetwork/networkComponent/UserConnections";
 
 
 function App() {
@@ -43,6 +44,7 @@ function App() {
             <Route path="/notifications" element={<Notification />} />
             <Route path="/profile/:id" element={<Profile />} />
             <Route path="/post" element={<Post />} />
+            <Route path="/connections/:userId" element={<UserConnections />} />
           </Route>
         </Routes>
       </AuthenticationProvider>

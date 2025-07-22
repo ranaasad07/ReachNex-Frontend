@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "./RightSidebar.css";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const RightSidebar = () => {
   const [suggestions, setSuggestions] = useState([]);
+  const navigate = useNavigate()
   const token = localStorage.getItem("token");
 
   const fetchSuggestions = async () => {
@@ -39,6 +41,10 @@ const RightSidebar = () => {
     if (token) fetchSuggestions();
   }, []);
 
+  const goToNetwork = () => {
+    navigate("/network")
+  }
+
   return (
     <div className="rightSidebar">
       <h4 className="rightSidebar__title">People you may know</h4>
@@ -63,7 +69,7 @@ const RightSidebar = () => {
           </div>
         ))}
       </div>
-      <a href="/network" className="rightSidebar__link">
+      <a onClick={goToNetwork} className="rightSidebar__link">
         View all recommendations →
       </a>
     </div>

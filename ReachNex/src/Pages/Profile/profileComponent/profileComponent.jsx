@@ -304,6 +304,7 @@ import { FaCamera, FaPen, FaUserAlt } from "react-icons/fa";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import io from "socket.io-client";
+import { toast } from 'react-toastify';
 
 import AuthenticationContext from "../../../components/Contexts/AuthenticationContext/AuthenticationContext";
 import useAuth from "../../../components/Authentication/useAuth/useAuth";
@@ -503,8 +504,11 @@ export default function ProfileComponent() {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+      toast.success("Logged out successfully! 👋");
     setUser(null);
+    setTimeout(() => {
     navigate("/");
+  }, 1500);
   };
 
   return (
@@ -567,8 +571,9 @@ export default function ProfileComponent() {
         </div>
         <p>{perUser?.profession}</p>
         <p>{perUser?.location}</p>
-        <p className="connection">connections ({connectionCount}) </p>
-
+        <p className="connection" onClick={() => navigate("/connections/me")}>
+         Connections ({connectionCount}) </p>
+        
         {!username && (
           <div className="actions">
             <button onClick={() => navigate("/jobs")}>Open to</button>

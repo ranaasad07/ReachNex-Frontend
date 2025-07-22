@@ -72,8 +72,9 @@ const SidebarProfile = () => {
 
       <div className={style.conectionCard}>
         <div className={style.connection}>
-          <h3>Connections</h3>
-          <p>{connectionCount}</p>
+          <h3 onClick={() => navigate("/connections/me")}>Connections</h3>
+          <p onClick={() => navigate("/connections/me")}> ({connectionCount})</p>
+
         </div>
         <div>
           <p>Grow your network</p>

@@ -92,9 +92,10 @@ const Network = () => {
     <div className="network-layout">
       <aside className="network-sidebar">
         <h3>Manage my network</h3>
-        <ul>
-          <li>Connections ({connectionCount})</li>
-        </ul>
+        <li onClick={() => navigate("/connections/me")}>
+         Connections ({connectionCount})
+        </li>
+
       </aside>
 
       <main className="network-main">
