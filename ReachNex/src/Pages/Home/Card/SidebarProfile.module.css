@@ -65,6 +65,7 @@
   align-items: center;
   gap: 10px;
   margin-bottom: 8px;
+  cursor: pointer;
 }
 
 .connection h3 {
