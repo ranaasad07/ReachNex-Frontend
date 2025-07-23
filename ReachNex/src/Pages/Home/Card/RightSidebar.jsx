@@ -52,7 +52,7 @@ const RightSidebar = () => {
         {suggestions.map((item) => (
           <div key={item._id} className="rightSidebar__item">
             <img
-              src={item.profilePicture || "https://ui-avatars.com/api/?name=User"}
+              src={item.profilePicture || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"}
               alt={item.fullName}
               className="rightSidebar__avatar"
             />

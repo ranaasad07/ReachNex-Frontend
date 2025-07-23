@@ -186,7 +186,7 @@ const PostInputBox = () => {
           <img 
   onClick={() => navigate(`/profile/${post.userId.username}`)}
   className={style.postProfile}
-  src={post.userId?.profilePicture || "https://i.pravatar.cc/300"}
+  src={post.userId?.profilePicture || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"}
   alt="User"
 />
 
@@ -286,7 +286,7 @@ const PostInputBox = () => {
                                 <img
                                   src={
                                     reply.userId?.profilePicture ||
-                                    "https://i.pravatar.cc/30"
+                                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"
                                   }
                                   style={{
                                     width: 28,
