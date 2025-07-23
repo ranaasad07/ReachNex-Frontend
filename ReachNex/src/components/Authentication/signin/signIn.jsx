@@ -97,7 +97,16 @@ const SignInForm = () => {
       );
       setUser(userProfileRes.data.user);
       toast.success("User login successfully!")
+      console.log(userProfileRes.data.user.isEmailVerified)
+      if(userProfileRes.data.user.isEmailVerified){
+
         navigate("/feed");
+      }else{
+        // navigate("/Verify");
+        alert(" email is not verified yet fix it later"
+        )
+        navigate("/feed")
+      }
 
 
     } catch (err) {
