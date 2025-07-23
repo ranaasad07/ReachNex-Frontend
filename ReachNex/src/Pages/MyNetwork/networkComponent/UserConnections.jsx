@@ -46,13 +46,13 @@ const UserConnections = () => {
           {connections.map((conn) => (
             <div key={conn._id} className="connection-card">
               <img
-                src={conn.profilePicture}
+                src={conn.profilePicture ||"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"}
                 alt={conn.fullName}
                 className="connection-avatar"
               />
               <div className="connection-info">
                 <h4>{conn.fullName}</h4>
-                <p>{conn.email}</p>
+                {/* <p>{conn.email}</p> */}
               </div>
             </div>
           ))}

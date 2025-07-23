@@ -369,7 +369,7 @@ const ChatDetail = ({ receiverId }) => {
       <div className={style.chatHeader}>
         <div className={style.headerContent}>
           <img
-            src={receiver?.profilePicture || "https://i.pravatar.cc/150?img=56"}
+            src={receiver?.profilePicture || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"}
             alt="profile"
             className={style.userimg}
           />
