@@ -319,6 +319,7 @@ const JobsSection = () => {
             placeholder="Company Logo URL (optional)"
             value={newJob.logoUrl}
             onChange={handleChange}
+          disabled
           />
           <textarea
             name="description"

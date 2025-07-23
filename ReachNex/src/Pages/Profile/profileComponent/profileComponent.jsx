@@ -293,18 +293,13 @@
 //   );
 // }
 
-
-
-
-
-
 import React, { useEffect, useState, useContext, useRef } from "react";
 import "./ProfileComponent.css";
-import { FaCamera, FaPen, FaUserAlt } from "react-icons/fa";
+import { FaCamera, FaPen } from "react-icons/fa";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import io from "socket.io-client";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
 import AuthenticationContext from "../../../components/Contexts/AuthenticationContext/AuthenticationContext";
 import useAuth from "../../../components/Authentication/useAuth/useAuth";
@@ -355,9 +350,12 @@ export default function ProfileComponent() {
   const fetchConnectionCount = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:5000/ReachNex/user/connections", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await axios.get(
+        "http://localhost:5000/ReachNex/user/connections",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setConnectionCount(res.data.count);
     } catch (err) {
       console.error("Failed to fetch connection count:", err);
@@ -504,11 +502,11 @@ export default function ProfileComponent() {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-      toast.success("Logged out successfully! 👋");
+    toast.success("Logged out successfully! 👋");
     setUser(null);
     setTimeout(() => {
-    navigate("/");
-  }, 1500);
+      navigate("/");
+    }, 1500);
   };
 
   return (
@@ -533,13 +531,16 @@ export default function ProfileComponent() {
         >
           {perUser?.profilePicture ? (
             <img
-              src={perUser.profilePicture}
+              src={
+                perUser.profilePicture
+              
+              }
               alt="Profile"
               className="profile-img"
             />
           ) : (
             <div className="profile-img placeholder">
-              <FaUserAlt />
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"/>
             </div>
           )}
           {!username && (
@@ -572,8 +573,9 @@ export default function ProfileComponent() {
         <p>{perUser?.profession}</p>
         <p>{perUser?.location}</p>
         <p className="connection" onClick={() => navigate("/connections/me")}>
-         Connections ({connectionCount}) </p>
-        
+          Connections ({connectionCount}){" "}
+        </p>
+
         {!username && (
           <div className="actions">
             <button onClick={() => navigate("/jobs")}>Open to</button>
