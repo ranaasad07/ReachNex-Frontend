@@ -540,7 +540,7 @@ export default function ProfileComponent() {
             />
           ) : (
             <div className="profile-img placeholder">
-              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"/>
+              <img className="simpleImg" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"/>
             </div>
           )}
           {!username && (
