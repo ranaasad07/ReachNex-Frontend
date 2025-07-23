@@ -18,52 +18,49 @@ const PostInputBox = () => {
   const [replyInputs, setReplyInputs] = useState({});
   // const [replyInputs, setReplyInputs] = useState({});
 
- useEffect(() => {
-  fetchPosts();
+  useEffect(() => {
+    fetchPosts();
 
-  // LIKE listener
-  socket.on("likeUpdated", ({ postId, likes }) => {
-    setPosts((prev) =>
-      prev.map((post) =>
-        post._id === postId ? { ...post, likes } : post
-      )
-    );
-  });
+    // LIKE listener
+    socket.on("likeUpdated", ({ postId, likes }) => {
+      setPosts((prev) =>
+        prev.map((post) => (post._id === postId ? { ...post, likes } : post))
+      );
+    });
 
-  // COMMENT listener
-  socket.on("commentAdded", ({ postId, comment }) => {
-    setPosts((prev) =>
-      prev.map((post) =>
-        post._id === postId
-          ? { ...post, comments: [...(post.comments || []), comment] }
-          : post
-      )
-    );
-  });
+    // COMMENT listener
+    socket.on("commentAdded", ({ postId, comment }) => {
+      setPosts((prev) =>
+        prev.map((post) =>
+          post._id === postId
+            ? { ...post, comments: [...(post.comments || []), comment] }
+            : post
+        )
+      );
+    });
 
-  // REPLY listener — ✅ only once
-  socket.on("replyAdded", ({ postId, commentId, reply }) => {
-    setPosts((prev) =>
-      prev.map((post) => {
-        if (post._id !== postId) return post;
-        const updatedComments = post.comments.map((cmt) =>
-          cmt._id === commentId
-            ? { ...cmt, replies: [...(cmt.replies || []), reply] }
-            : cmt
-        );
-        return { ...post, comments: updatedComments };
-      })
-    );
-  });
+    // REPLY listener — ✅ only once
+    socket.on("replyAdded", ({ postId, commentId, reply }) => {
+      setPosts((prev) =>
+        prev.map((post) => {
+          if (post._id !== postId) return post;
+          const updatedComments = post.comments.map((cmt) =>
+            cmt._id === commentId
+              ? { ...cmt, replies: [...(cmt.replies || []), reply] }
+              : cmt
+          );
+          return { ...post, comments: updatedComments };
+        })
+      );
+    });
 
-  // Cleanup function — ✅ removes each listener only once
-  return () => {
-    socket.off("likeUpdated");
-    socket.off("commentAdded");
-    socket.off("replyAdded");
-  };
-}, []);
-
+    // Cleanup function — ✅ removes each listener only once
+    return () => {
+      socket.off("likeUpdated");
+      socket.off("commentAdded");
+      socket.off("replyAdded");
+    };
+  }, []);
 
   const fetchPosts = async () => {
     try {
@@ -133,15 +130,16 @@ const PostInputBox = () => {
       console.error("Reply Error:", err);
     }
   };
-  const goToProfile = () =>{
-    navigate(`/profile/${user.username}`)
-  }
+  const goToProfile = () => {
+    navigate(`/profile/${user.username}`);
+  };
 
   return (
     <>
       <div className={style.mainContainer}>
         <div className={style.postContainer}>
-          <img onClick={goToProfile}
+          <img
+            onClick={goToProfile}
             className={style.profilePic}
             src={
               user?.profilePicture ||
@@ -157,25 +155,24 @@ const PostInputBox = () => {
           </button>
         </div>
         <div className={style.icons}>
-  <ul>
-    <li>
-      <Link to="/Post" className={style.linkWrap}>
-        <VideocamIcon /> Video
-      </Link>
-    </li>
-    <li>
-      <Link to="/Post" className={style.linkWrap}>
-        <AddAPhotoIcon /> Pic
-      </Link>
-    </li>
-    <li>
-      <Link to="/Post" className={style.linkWrap}>
-        <ArticleIcon /> Article
-      </Link>
-    </li>
-  </ul>
-</div>
-
+          <ul>
+            <li>
+              <Link to="/Post" className={style.linkWrap}>
+                <VideocamIcon /> Video
+              </Link>
+            </li>
+            <li>
+              <Link to="/Post" className={style.linkWrap}>
+                <AddAPhotoIcon /> Pic
+              </Link>
+            </li>
+            <li>
+              <Link to="/Post" className={style.linkWrap}>
+                <ArticleIcon /> Article
+              </Link>
+            </li>
+          </ul>
+        </div>
       </div>
 
       <div className={style.feedSection}>
@@ -183,13 +180,16 @@ const PostInputBox = () => {
           posts.map((post) => (
             <div key={post._id} className={style.postCard}>
               <div className={style.postUser}>
-          <img 
-  onClick={() => navigate(`/profile/${post.userId.username}`)}
-  className={style.postProfile}
-  src={post.userId?.profilePicture || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"}
-  alt="User"
-/>
-
+                <img
+                  onClick={() => navigate(`/profile/user/${post.userId._id}`)}
+                  className={style.postProfile}
+                  src={
+                    post.userId?.profilePicture
+                      ? post.userId.profilePicture
+                      : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"
+                  }
+                  alt="User"
+                />
 
                 <h4>{post.userId?.fullName || "User"}</h4>
               </div>

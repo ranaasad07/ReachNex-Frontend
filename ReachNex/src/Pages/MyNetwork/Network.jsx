@@ -16,9 +16,12 @@ const Network = () => {
 
   const fetchConnectionCount = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/ReachNex/user/connections", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await axios.get(
+        "http://localhost:5000/ReachNex/user/connections",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setConnectionCount(res.data.count);
     } catch (err) {
       console.error("Failed to fetch connection count:", err);
@@ -27,9 +30,12 @@ const Network = () => {
 
   const fetchSuggestions = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/ReachNex/suggestions", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await axios.get(
+        "http://localhost:5000/ReachNex/suggestions",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setSuggested(res.data.map((user) => ({ ...user, requested: false })));
     } catch (err) {
       console.error("Error fetching suggestions:", err);
@@ -92,10 +98,18 @@ const Network = () => {
     <div className="network-layout">
       <aside className="network-sidebar">
         <h3>Manage my network</h3>
-        <li onClick={() => navigate("/connections/me")}>
-         Connections ({connectionCount})
+        <li
+          onClick={() => {
+            const token = localStorage.getItem("token");
+            if (token) {
+              const decoded = jwtDecode(token);
+              const userId = decoded.id;
+              navigate(`/connections/${userId}`);
+            }
+          }}
+        >
+          Connections ({connectionCount})
         </li>
-
       </aside>
 
       <main className="network-main">
@@ -111,8 +125,14 @@ const Network = () => {
           ) : (
             suggested.map((person) => (
               <div key={person._id} className="suggestion-card">
-                <img  src={ person.profilePicture ||"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"} alt={person.fullName}/>
-                
+                <img
+                  src={
+                    person.profilePicture ||
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"
+                  }
+                  alt={person.fullName}
+                />
+
                 <h4>{person.fullName}</h4>
                 <span>{person.email}</span>
                 <br />

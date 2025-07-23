@@ -4,6 +4,7 @@ import AuthenticationContext from "../../../components/Contexts/AuthenticationCo
 import style from "./SidebarProfile.module.css";
 import axios from "axios";
 import io from "socket.io-client";
+import { jwtDecode } from "jwt-decode";
 
 const socket = io("http://localhost:5000");
 
@@ -15,9 +16,12 @@ const SidebarProfile = () => {
   const fetchConnectionCount = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:5000/ReachNex/user/connections", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await axios.get(
+        "http://localhost:5000/ReachNex/user/connections",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setConnectionCount(res.data.count);
     } catch (err) {
       console.error("Failed to fetch connection count:", err);
@@ -42,19 +46,20 @@ const SidebarProfile = () => {
   const goToExperience = () => {
     navigate(`/profile/${user._id}#experience`);
   };
-  const goToProfile = () =>{
-    navigate(`/profile/${user.username}`)
-  }
+  const goToProfile = () => {
+    navigate("/profile/me");
+  };
   return (
     <div className={style.mainContainer}>
       <div className={style.card}>
         <div className={style.backgroundimage}>
-          <img 
+          <img
             src="https://media.istockphoto.com/id/1317584985/photo/social-media-and-network.jpg?s=612x612&w=0&k=20&c=0d74KNiIifGvT10QDYvvsAchywxec4Xqk10-U_oe5IY="
             alt="Background"
           />
         </div>
-        <img onClick={goToProfile}
+        <img
+          onClick={goToProfile}
           className={style.profilePic}
           src={
             user?.profilePicture
@@ -72,9 +77,31 @@ const SidebarProfile = () => {
 
       <div className={style.conectionCard}>
         <div className={style.connection}>
-          <h3 onClick={() => navigate("/connections/me")}>Connections</h3>
-          <p onClick={() => navigate("/connections/me")}> ({connectionCount})</p>
-
+          <h3
+            onClick={() => {
+              const token = localStorage.getItem("token");
+              if (token) {
+                const decoded = jwtDecode(token);
+                const userId = decoded.id;
+                navigate(`/connections/${userId}`);
+              }
+            }}
+          >
+            Connections
+          </h3>
+          <p
+            onClick={() => {
+              const token = localStorage.getItem("token");
+              if (token) {
+                const decoded = jwtDecode(token);
+                const userId = decoded.id;
+                navigate(`/connections/${userId}`);
+              }
+            }}
+          >
+            {" "}
+            ({connectionCount})
+          </p>
         </div>
         <div>
           <p>Grow your network</p>
