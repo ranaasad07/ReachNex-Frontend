@@ -19,7 +19,7 @@ import Notification from "./Pages/Notifications/Notification";
 import Profile from "./Pages/Profile/Profile";
 import Post from "./Pages/Home/Post/Post";
 import UserConnections from "./Pages/MyNetwork/networkComponent/UserConnections";
-
+import PostDetail from "./Pages/Notifications/PostDetail";
 
 function App() {
   return (
@@ -42,6 +42,7 @@ function App() {
             <Route path="/messaging" element={<Messaging />} />
             {/* <Route path="/messaging/:id" element={<ChatDetail />} /> */}
             <Route path="/notifications" element={<Notification />} />
+              <Route path="/post/:postId" element={<PostDetail />} />
             <Route path="/profile/:id" element={<Profile />} />
             <Route path="/post" element={<Post />} />
             <Route path="/connections/:userId" element={<UserConnections />} />
