@@ -111,7 +111,8 @@ const Network = () => {
           ) : (
             suggested.map((person) => (
               <div key={person._id} className="suggestion-card">
-                <img src={person.profilePicture} alt={person.fullName} />
+                <img  src={ person.profilePicture ||"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"} alt={person.fullName}/>
+                
                 <h4>{person.fullName}</h4>
                 <span>{person.email}</span>
                 <br />
