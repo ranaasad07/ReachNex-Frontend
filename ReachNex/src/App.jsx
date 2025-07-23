@@ -1,4 +1,3 @@
-  
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthenticationProvider } from "./components/Contexts/AuthenticationContext/AuthenticationContext";
@@ -14,12 +13,12 @@ import MyNetwork from "./Pages/MyNetwork/Network";
 import Jobs from "./Pages/Jobs/Jobs";
 import Feed from "./components/Feed/Feed";
 import Messaging from "./Pages/Messaging/Messaging";
-// import ChatDetail from "./Pages/Messaging/ChatDetail";
+
 import Notification from "./Pages/Notifications/Notification";
 import Profile from "./Pages/Profile/Profile";
 import Post from "./Pages/Home/Post/Post";
 import UserConnections from "./Pages/MyNetwork/networkComponent/UserConnections";
-
+import ProfileVisitor from "./Pages/Profile/ProfileVisitor";
 
 function App() {
   return (
@@ -40,9 +39,10 @@ function App() {
             <Route path="/network" element={<MyNetwork />} />
             <Route path="/jobs" element={<Jobs />} />
             <Route path="/messaging" element={<Messaging />} />
-            {/* <Route path="/messaging/:id" element={<ChatDetail />} /> */}
             <Route path="/notifications" element={<Notification />} />
-            <Route path="/profile/:id" element={<Profile />} />
+            {/* Update route paths to be consistent */}
+            <Route path="/profile/me" element={<Profile />} />
+            <Route path="/profile/user/:id" element={<ProfileVisitor />} />
             <Route path="/post" element={<Post />} />
             <Route path="/connections/:userId" element={<UserConnections />} />
           </Route>
