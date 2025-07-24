@@ -112,6 +112,39 @@
   margin: 0;
   cursor: pointer;
 }
+.connection-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.connect-btn {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid #0a66c2;
+  background: white;
+  color: #0a66c2;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.connect-btn:hover {
+  background: #0a66c2;
+  color: white;
+}
+
+.connect-btn.connected {
+  background: #0a66c2;
+  color: white;
+}
+
+.connect-btn.requested {
+  background: #e0e0e0;
+  border-color: #e0e0e0;
+  color: #666;
+  cursor: not-allowed;
+}
 
 /* -------------------- */
 

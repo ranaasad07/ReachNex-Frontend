@@ -3,10 +3,8 @@ import { useNavigate } from "react-router-dom";
 import AuthenticationContext from "../../../components/Contexts/AuthenticationContext/AuthenticationContext";
 import style from "./SidebarProfile.module.css";
 import axios from "axios";
-import io from "socket.io-client";
+import socket from "../../../socket";
 import { jwtDecode } from "jwt-decode";
-
-const socket = io("http://localhost:5000");
 
 const SidebarProfile = () => {
   const { user } = useContext(AuthenticationContext);
@@ -31,15 +29,31 @@ const SidebarProfile = () => {
   useEffect(() => {
     if (!user?._id) return;
 
-    socket.emit("join", user._id); // Join own room
+    // Initial fetch
     fetchConnectionCount();
 
+    // Listen for ANY connection updates
+    socket.on("connectionUpdated", () => {
+      console.log("Connection update received");
+      fetchConnectionCount();
+    });
+
+    // Listen for connection accepts
     socket.on("connectionAccepted", () => {
+      console.log("Connection accepted");
+      fetchConnectionCount();
+    });
+
+    // Listen for new connection requests
+    socket.on("newConnection", () => {
+      console.log("New connection");
       fetchConnectionCount();
     });
 
     return () => {
+      socket.off("connectionUpdated");
       socket.off("connectionAccepted");
+      socket.off("newConnection");
     };
   }, [user?._id]);
 

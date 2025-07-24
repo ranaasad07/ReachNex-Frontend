@@ -181,7 +181,14 @@ const PostInputBox = () => {
             <div key={post._id} className={style.postCard}>
               <div className={style.postUser}>
                 <img
-                  onClick={() => navigate(`/profile/user/${post.userId._id}`)}
+                  onClick={() => {
+                    // Compare post user ID with logged in user ID
+                    if (post.userId._id === (user._id || user.id)) {
+                      navigate("/profile/me");
+                    } else {
+                      navigate(`/profile/user/${post.userId._id}`);
+                    }
+                  }}
                   className={style.postProfile}
                   src={
                     post.userId?.profilePicture

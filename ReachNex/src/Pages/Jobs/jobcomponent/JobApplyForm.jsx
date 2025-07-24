@@ -1,10 +1,12 @@
 import React, { useState, useContext } from "react";
 import axios from "axios";
 import AuthenticationContext from "../../../components/Contexts/AuthenticationContext/AuthenticationContext";
+import { toast } from "react-toastify";
 import "./JobApplyForm.css";
 
 const JobApplyForm = ({ jobId, onClose, onApplied }) => {
   const { user } = useContext(AuthenticationContext);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -24,6 +26,7 @@ const JobApplyForm = ({ jobId, onClose, onApplied }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
     const payload = new FormData();
     payload.append("name", formData.name);
@@ -38,12 +41,14 @@ const JobApplyForm = ({ jobId, onClose, onApplied }) => {
         `http://localhost:5000/ReachNex/jobs/${jobId}/apply`,
         payload
       );
-      alert("✅ Application submitted successfully!");
+      toast.success("Application submitted successfully!");
       onApplied(jobId); // ✅ Notify parent to mark as applied
-      onClose();        // ✅ Close the modal
+      onClose(); // ✅ Close the modal
     } catch (err) {
       console.error("❌ Failed to apply:", err);
-      alert("Something went wrong!");
+      toast.error("Failed to submit application!");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -96,8 +101,22 @@ const JobApplyForm = ({ jobId, onClose, onApplied }) => {
           onChange={handleChange}
         />
 
-        <button type="submit">Submit Application</button>
-        <button type="button" onClick={onClose}>Cancel</button>
+        <div className="form-actions">
+          <button
+            type="submit"
+            disabled={isLoading}
+            className={isLoading ? "loading" : ""}
+          >
+            {isLoading ? (
+              <span className="spinner"></span>
+            ) : (
+              "Submit Application"
+            )}
+          </button>
+          <button type="button" onClick={onClose} disabled={isLoading}>
+            Cancel
+          </button>
+        </div>
       </form>
     </div>
   );
