@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthenticationProvider } from "./components/Contexts/AuthenticationContext/AuthenticationContext";
 
 import SignUpForm from "./components/Authentication/signUp/signUp";
@@ -27,12 +27,13 @@ function App() {
       <AuthenticationProvider>
         <Routes>
           {/* Public Routes */}
-          <Route path="/" element={<SignInForm />} />
+          <Route path="/login" element={<SignInForm />} />
           <Route path="/signup" element={<SignUpForm />} />
           <Route path="/verify" element={<Emailverify />} />
           <Route path="/forgetpassword" element={<ForgetPassword />} />
           <Route path="/verifyforgetotp" element={<VerifyForgetOtp />} />
           <Route path="/changepassword" element={<ChangePassword />} />
+          <Route path="/" element={<Navigate to="/login" />} />
 
           {/* Protected Routes */}
           <Route element={<Feed />}>
@@ -44,7 +45,7 @@ function App() {
             {/* Update route paths to be consistent */}
             <Route path="/profile/me" element={<Profile />} />
             <Route path="/profile/user/:id" element={<ProfileVisitor />} />
-              <Route path="/post/:postId" element={<PostDetail />} />
+            <Route path="/post/:postId" element={<PostDetail />} />
             <Route path="/profile/:id" element={<Profile />} />
             <Route path="/post" element={<Post />} />
             <Route path="/connections/:userId" element={<UserConnections />} />

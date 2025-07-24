@@ -10,8 +10,6 @@ import AuthenticationContext from "../../../components/Contexts/AuthenticationCo
 // import { useState } from "react";
 
 const SignInForm = () => {
-
-  
   const [formData, setFormData] = useState({ email: "", password: "" });
   const navigate = useNavigate();
   const { setUser } = useContext(AuthenticationContext); // ✅
@@ -25,7 +23,7 @@ const SignInForm = () => {
 
     if (!tokenforlocalstorage) {
       // No token, redirect to login
-      // navigate("/");
+      navigate("/login");
       return;
     }
 
@@ -35,7 +33,7 @@ const SignInForm = () => {
     } catch (err) {
       console.log("Invalid token:", err);
       // navigate("/");
-      
+
       return;
     }
 
@@ -57,22 +55,18 @@ const SignInForm = () => {
 
         // Assuming res.data.findUser contains user info
         setUser(res.data.findUser);
-        alert("already loged In")
-        navigate("/feed")
+        alert("already loged In");
+        navigate("/feed");
       } catch (err) {
         console.log(err);
         console.log("Invalid credentials");
-        return
+        return;
         // navigate("/");
       }
     };
 
     verifyUser();
   }, [navigate]);
-
-
-
-
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -96,19 +90,15 @@ const SignInForm = () => {
         `http://localhost:5000/ReachNex/getuser/${id}`
       );
       setUser(userProfileRes.data.user);
-      toast.success("User login successfully!")
-      console.log(userProfileRes.data.user.isEmailVerified)
-      if(userProfileRes.data.user.isEmailVerified){
-
+      toast.success("User login successfully!");
+      console.log(userProfileRes.data.user.isEmailVerified);
+      if (userProfileRes.data.user.isEmailVerified) {
         navigate("/feed");
-      }else{
+      } else {
         // navigate("/Verify");
-        alert(" email is not verified yet fix it later"
-        )
-        navigate("/feed")
+        alert(" email is not verified yet fix it later");
+        navigate("/feed");
       }
-
-
     } catch (err) {
       console.log(err);
       toast.error("Invalid credentials");
