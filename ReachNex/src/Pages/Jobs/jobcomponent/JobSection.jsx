@@ -155,23 +155,6 @@
 
 // export default JobsSection;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import "./JobSection.css";
@@ -194,10 +177,10 @@ const JobsSection = () => {
     setShowApplyForm(true); // ✅ just open the form
   };
 
-  const handleAppliedSuccess = () => {
-    // ✅ only run when form successfully submitted
-    setAppliedJobs((prev) => [...prev, selectedJobId]);
-  };
+  //   const handleAppliedSuccess = () => {
+  //     // ✅ only run when form successfully submitted
+  //     setAppliedJobs((prev) => [...prev, selectedJobId]);
+  //   };
 
   const toggleForm = () => setShowForm((prev) => !prev);
 
@@ -222,22 +205,38 @@ const JobsSection = () => {
     fetchJobs();
   }, []);
 
+  // Add local storage sync
   useEffect(() => {
     const fetchAppliedJobs = async () => {
       try {
         const res = await axios.get(
           `http://localhost:5000/ReachNex/applied/${user._id}`
         );
-        setAppliedJobs(res.data); // array of jobId strings
+        // Save to localStorage for persistence
+        localStorage.setItem("appliedJobs", JSON.stringify(res.data));
+        setAppliedJobs(res.data);
       } catch (err) {
         console.error("Error fetching applied jobs:", err);
       }
     };
 
+    // First try to get from localStorage
+    const savedAppliedJobs = localStorage.getItem("appliedJobs");
+    if (savedAppliedJobs) {
+      setAppliedJobs(JSON.parse(savedAppliedJobs));
+    }
+
     if (user?._id) {
       fetchAppliedJobs();
     }
-  }, [user]);
+  }, [user?._id]);
+
+  const handleAppliedSuccess = (jobId) => {
+    const updatedAppliedJobs = [...appliedJobs, jobId];
+    setAppliedJobs(updatedAppliedJobs);
+    // Update localStorage
+    localStorage.setItem("appliedJobs", JSON.stringify(updatedAppliedJobs));
+  };
 
   const handleChange = (e) => {
     setNewJob({ ...newJob, [e.target.name]: e.target.value });
@@ -319,7 +318,7 @@ const JobsSection = () => {
             placeholder="Company Logo URL (optional)"
             value={newJob.logoUrl}
             onChange={handleChange}
-          disabled
+            disabled
           />
           <textarea
             name="description"
@@ -339,7 +338,9 @@ const JobsSection = () => {
         {jobs.map((job, index) => (
           <div key={index} className="jobCard">
             <img
-              src={job.logoUrl || `https://ui-avatars.com/api/?name=${job.company}`}
+              src={
+                job.logoUrl || `https://ui-avatars.com/api/?name=${job.company}`
+              }
               alt={job.company}
               className="jobCard__logo"
             />
@@ -369,10 +370,11 @@ const JobsSection = () => {
         />
       )}
 
-      <p className="jobsSection__footer">Based on your profile and search activity</p>
+      <p className="jobsSection__footer">
+        Based on your profile and search activity
+      </p>
     </div>
   );
 };
 
 export default JobsSection;
-
