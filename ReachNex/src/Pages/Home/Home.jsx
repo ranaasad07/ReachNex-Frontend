@@ -13,8 +13,7 @@ import { Navigate, NavigationType } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
- 
-const navigate = useNavigate();
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -24,7 +23,7 @@ const navigate = useNavigate();
     if (!tokenforlocalstorage) {
       // No token, redirect to login
       navigate("/");
-      alert("you need to login first")
+      alert("you need to login first");
       return;
     }
 
