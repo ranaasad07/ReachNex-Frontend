@@ -5,7 +5,7 @@ import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import AuthenticationContext from "../../../components/Contexts/AuthenticationContext/AuthenticationContext";
 
-export default function ProfileVisitorComponent() {
+const ProfileVisitorComponent = () => {
   const { id } = useParams();
   const [perUser, setPerUser] = useState(null);
   const [connectionCount, setConnectionCount] = useState(0);
@@ -126,6 +126,13 @@ export default function ProfileVisitorComponent() {
   };
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("You need to login first");
+      navigate("/login"); // Update path
+      return;
+    }
+
     if (id) {
       fetchUser();
       fetchConnectionCount();
@@ -173,4 +180,6 @@ export default function ProfileVisitorComponent() {
       </div>
     </div>
   );
-}
+};
+
+export default ProfileVisitorComponent;

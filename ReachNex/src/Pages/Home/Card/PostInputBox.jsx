@@ -134,6 +134,14 @@ const PostInputBox = () => {
     navigate(`/profile/${user.username}`);
   };
 
+  // Helper function to calculate total comment count (comments + replies)
+  const getTotalCommentCount = (post) => {
+    const commentsCount = post.comments?.length || 0;
+    const repliesCount = post.comments?.reduce((total, comment) => 
+      total + (comment.replies?.length || 0), 0) || 0;
+    return commentsCount + repliesCount;
+  };
+
   return (
     <>
       <div className={style.mainContainer}>
@@ -221,7 +229,7 @@ const PostInputBox = () => {
                   👍 Like ({post.likes?.length || 0})
                 </button>
                 <button onClick={() => setOpenCommentBox(post._id)}>
-                  💬 Comment ({post.comments?.length || 0})
+                  💬 Comment ({getTotalCommentCount(post)})
                 </button>
               </div>
 
