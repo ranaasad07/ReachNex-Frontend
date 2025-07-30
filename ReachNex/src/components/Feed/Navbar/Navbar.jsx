@@ -14,7 +14,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 const Navbar = () => {
-    const { unreadCount } = useNotifications();
+  // const { unreadCount } = useNotifications();
+  const { unreadCount, unreadMessageCount } = useNotifications();
+
   const username = useAuth();
   console.log(username);
 
@@ -46,10 +48,19 @@ const Navbar = () => {
               <span>Jobs</span>
             </Link>
           </li>
-          <li>
+          {/* <li>
             <Link to="/messaging">
               <FontAwesomeIcon icon={faEnvelope} />
               <span>Messaging</span>
+            </Link>
+          </li> */}
+          <li style={{ position: "relative" }}>
+            <Link to="/messaging">
+              <FontAwesomeIcon icon={faEnvelope} />
+              <span>Messaging</span>
+              {unreadMessageCount > 0 && (
+                <span className={style.badge}>{unreadMessageCount}</span>
+              )}
             </Link>
           </li>
           {/* <li>
