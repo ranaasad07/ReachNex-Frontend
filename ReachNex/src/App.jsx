@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthenticationProvider } from "./components/Contexts/AuthenticationContext/AuthenticationContext";
-
+import { NotificationProvider } from "./components/Contexts/notificationContext"; // ✅ Import context
 import SignUpForm from "./components/Authentication/signUp/signUp";
 import SignInForm from "./components/Authentication/signin/signIn";
 import Emailverify from "./components/Authentication/verification/Emailverify";
@@ -25,6 +25,7 @@ function App() {
   return (
     <BrowserRouter>
       <AuthenticationProvider>
+          <NotificationProvider>
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<SignInForm />} />
@@ -50,6 +51,7 @@ function App() {
             <Route path="/connections/:userId" element={<UserConnections />} />
           </Route>
         </Routes>
+          </NotificationProvider>
       </AuthenticationProvider>
     </BrowserRouter>
   );

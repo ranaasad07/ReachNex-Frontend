@@ -1,4 +1,5 @@
 import React from "react";
+import { useNotifications } from "../../Contexts/notificationContext";
 import { Link } from "react-router-dom";
 import style from "../Navbar/Navbar.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,6 +14,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 const Navbar = () => {
+    const { unreadCount } = useNotifications();
   const username = useAuth();
   console.log(username);
 
@@ -50,10 +52,19 @@ const Navbar = () => {
               <span>Messaging</span>
             </Link>
           </li>
-          <li>
+          {/* <li>
             <Link to="/notifications">
               <FontAwesomeIcon icon={faBell} />
               <span>Notification</span>
+            </Link>
+          </li> */}
+          <li style={{ position: "relative" }}>
+            <Link to="/notifications">
+              <FontAwesomeIcon icon={faBell} />
+              <span>Notification</span>
+              {unreadCount > 0 && (
+                <span className={style.badge}>{unreadCount}</span>
+              )}
             </Link>
           </li>
           <li>
