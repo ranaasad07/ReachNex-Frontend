@@ -208,12 +208,17 @@
     };
 
     const handleLogout = () => {
-      localStorage.removeItem("token");
-      toast.success("Logged out successfully! 👋");
-      setUser(null);
-      setTimeout(() => {
-        navigate("/");
-      }, 1500);
+      confirm("You want to logout")
+
+      if(confirm){
+
+        localStorage.removeItem("token");
+        toast.success("Logged out successfully! 👋");
+        setUser(null);
+        setTimeout(() => {
+          navigate("/");
+        }, 1500);
+      }
     };
 
     return (

@@ -35,6 +35,10 @@ const UserConnections = () => {
 
     fetchConnections();
   }, [userId, token]);
+  const goToVisitorProfile = (userId) => {
+  navigate(`/profile/user/${userId}`);
+};
+
 
   return (
     <div className="connections-page">
@@ -46,12 +50,16 @@ const UserConnections = () => {
           {connections.map((conn) => (
             <div key={conn._id} className="connection-card">
               <img
+              onClick={() => goToVisitorProfile(conn._id)}
                 src={conn.profilePicture ||"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"}
                 alt={conn.fullName}
                 className="connection-avatar"
+                style={{ cursor: "pointer" }}
               />
               <div className="connection-info">
-                <h4>{conn.fullName}</h4>
+                <h4 onClick={() => goToVisitorProfile(conn._id)}
+                  style={{ cursor: "pointer" }}
+                  >{conn.fullName}</h4>
                 {/* <p>{conn.email}</p> */}
               </div>
             </div>
