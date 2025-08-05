@@ -296,15 +296,12 @@ export const NotificationProvider = ({ children }) => {
     };
 
     fetchUnreadMessages();
-    const interval = setInterval(fetchUnreadMessages, 120000); // 2 mins
+    // const interval = setInterval(fetchUnreadMessages, 120000); // 2 mins
 
-    socket.on("unreadMessageCount", (count) => {
-      setUnreadMessageCount(count);
-    });
-
+    
     return () => {
-      clearInterval(interval);
-      socket.off("unreadMessageCount");
+      // clearInterval(interval);
+      
     };
   }, [userId]);
 
