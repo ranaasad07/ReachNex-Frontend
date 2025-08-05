@@ -94,6 +94,10 @@ const Network = () => {
     };
   }, []);
 
+ const goToProfile = (user) => {
+  navigate(`/profile/user/${user._id}`); // ✅ visitor route with ID
+};
+
   return (
     <div className="network-layout">
       <aside className="network-sidebar">
@@ -126,14 +130,17 @@ const Network = () => {
             suggested.map((person) => (
               <div key={person._id} className="suggestion-card">
                 <img
+                onClick={() => goToProfile(person)}
                   src={
                     person.profilePicture ||
                     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"
                   }
                   alt={person.fullName}
+                  style={{ cursor: "pointer" }}
                 />
 
-                <h4>{person.fullName}</h4>
+                <h4 onClick={() => goToProfile(person)}  
+                >{person.fullName}</h4>
                 <span>{person.email}</span>
                 <br />
                 <button onClick={() => handleConnect(person._id)}>
