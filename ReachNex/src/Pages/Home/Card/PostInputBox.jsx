@@ -1,0 +1,361 @@
+// PostInputBox.jsx
+import React, { useContext, useEffect, useState } from "react";
+import style from "./PostInputBox.module.css";
+import AuthenticationContext from "../../../components/Contexts/AuthenticationContext/AuthenticationContext";
+import { useNavigate, Link } from "react-router-dom";
+import VideocamIcon from "@mui/icons-material/Videocam";
+import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
+import ArticleIcon from "@mui/icons-material/Article";
+import axios from "axios";
+import socket from "../Socket";
+
+const PostInputBox = () => {
+  const { user } = useContext(AuthenticationContext);
+  const navigate = useNavigate();
+  const [posts, setPosts] = useState([]);
+  const [openCommentBox, setOpenCommentBox] = useState(null);
+  const [commentInputs, setCommentInputs] = useState({});
+  const [replyInputs, setReplyInputs] = useState({});
+  // const [replyInputs, setReplyInputs] = useState({});
+
+  useEffect(() => {
+    fetchPosts();
+
+    // LIKE listener
+    socket.on("likeUpdated", ({ postId, likes }) => {
+      setPosts((prev) =>
+        prev.map((post) => (post._id === postId ? { ...post, likes } : post))
+      );
+    });
+
+    // COMMENT listener
+    socket.on("commentAdded", ({ postId, comment }) => {
+      setPosts((prev) =>
+        prev.map((post) =>
+          post._id === postId
+            ? { ...post, comments: [...(post.comments || []), comment] }
+            : post
+        )
+      );
+    });
+
+    // REPLY listener — ✅ only once
+    socket.on("replyAdded", ({ postId, commentId, reply }) => {
+      setPosts((prev) =>
+        prev.map((post) => {
+          if (post._id !== postId) return post;
+          const updatedComments = post.comments.map((cmt) =>
+            cmt._id === commentId
+              ? { ...cmt, replies: [...(cmt.replies || []), reply] }
+              : cmt
+          );
+          return { ...post, comments: updatedComments };
+        })
+      );
+    });
+
+    // Cleanup function — ✅ removes each listener only once
+    return () => {
+      socket.off("likeUpdated");
+      socket.off("commentAdded");
+      socket.off("replyAdded");
+    };
+  }, []);
+
+  const fetchPosts = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:5000/ReachNex/gettingAllPosts"
+      );
+      setPosts(res.data.Posts || []);
+    } catch (err) {
+      console.error("Error fetching posts:", err);
+    }
+  };
+
+  const handleLike = async (postId) => {
+    try {
+      await axios.post("http://localhost:5000/ReachNex/likePost", {
+        postId,
+        userId: user.id || user._id,
+      });
+    } catch (err) {
+      console.error("Like Error:", err);
+    }
+  };
+
+  const handleComment = async (postId) => {
+    const text = commentInputs[postId];
+    if (!text) return;
+
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/ReachNex/commentPost",
+        {
+          postId,
+          userId: user.id || user._id,
+          text,
+        }
+      );
+
+      if (res.status === 200) {
+        setCommentInputs((prev) => ({ ...prev, [postId]: "" }));
+        setOpenCommentBox(null);
+        setOpenCommentBox(null);
+      }
+    } catch (err) {
+      console.error("Comment Error:", err);
+    }
+  };
+
+  const handleReply = async (postId, commentId) => {
+    const replyText = replyInputs[commentId];
+    if (!replyText) return;
+
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/ReachNex/replyComment",
+        {
+          postId,
+          commentId,
+          userId: user.id || user._id,
+          text: replyText,
+        }
+      );
+
+      if (res.status === 200) {
+        setReplyInputs((prev) => ({ ...prev, [commentId]: "" }));
+      }
+    } catch (err) {
+      console.error("Reply Error:", err);
+    }
+  };
+  const goToProfile = () => {
+    navigate(`/profile/${user.username}`);
+  };
+
+  // Helper function to calculate total comment count (comments + replies)
+  const getTotalCommentCount = (post) => {
+    const commentsCount = post.comments?.length || 0;
+    const repliesCount = post.comments?.reduce((total, comment) => 
+      total + (comment.replies?.length || 0), 0) || 0;
+    return commentsCount + repliesCount;
+  };
+
+  return (
+    <>
+      <div className={style.mainContainer}>
+        <div className={style.postContainer}>
+          <img
+            onClick={goToProfile}
+            className={style.profilePic}
+            src={
+              user?.profilePicture ||
+              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"
+            }
+            alt="Profile"
+          />
+          <button
+            className={style.postButton}
+            onClick={() => navigate("/Post")}
+          >
+            Start Post
+          </button>
+        </div>
+        <div className={style.icons}>
+          <ul>
+            <li>
+              <Link to="/Post" className={style.linkWrap}>
+                <VideocamIcon /> Video
+              </Link>
+            </li>
+            <li>
+              <Link to="/Post" className={style.linkWrap}>
+                <AddAPhotoIcon /> Pic
+              </Link>
+            </li>
+            <li>
+              <Link to="/Post" className={style.linkWrap}>
+                <ArticleIcon /> Article
+              </Link>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div className={style.feedSection}>
+        {posts.length > 0 ? (
+          posts.map((post) => (
+            <div key={post._id} className={style.postCard}>
+              <div className={style.postUser}>
+                <img
+                  onClick={() => {
+                    // Compare post user ID with logged in user ID
+                    if (post.userId._id === (user._id || user.id)) {
+                      navigate("/profile/me");
+                    } else {
+                      navigate(`/profile/user/${post.userId._id}`);
+                    }
+                  }}
+                  className={style.postProfile}
+                  src={
+                    post.userId?.profilePicture
+                      ? post.userId.profilePicture
+                      : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"
+                  }
+                  alt="User"
+                />
+
+                <h4>{post.userId?.fullName || "User"}</h4>
+              </div>
+              <p>{post.caption}</p>
+              {post.mediaUrl &&
+                (post.mediaUrl.includes("video") ? (
+                  <video
+                    controls
+                    className={style.postMedia}
+                    src={post.mediaUrl}
+                  />
+                ) : (
+                  <img
+                    className={style.postMedia}
+                    src={post.mediaUrl}
+                    alt="Post"
+                  />
+                ))}
+
+              <div className={style.actions}>
+                <button onClick={() => handleLike(post._id)}>
+                  👍 Like ({post.likes?.length || 0})
+                </button>
+                <button onClick={() => setOpenCommentBox(post._id)}>
+                  💬 Comment ({getTotalCommentCount(post)})
+                </button>
+              </div>
+
+              {openCommentBox === post._id && (
+                <div className={style.commentBox}>
+                  <div className={style.commentBoxHeader}>
+                    <input
+                      type="text"
+                      placeholder="Write a comment..."
+                      value={commentInputs[post._id] || ""}
+                      onChange={(e) =>
+                        setCommentInputs((prev) => ({
+                          ...prev,
+                          [post._id]: e.target.value,
+                        }))
+                      }
+                      className={style.commentInput}
+                    />
+                    <button
+                      onClick={() => setOpenCommentBox(null)}
+                      className={style.closeBtn}
+                    >
+                      ❌
+                    </button>
+                    <button
+                      onClick={() => handleComment(post._id)}
+                      className={style.commentBtn}
+                    >
+                      Post
+                    </button>
+                  </div>
+
+                  <div className={style.commentList}>
+                    {post.comments?.map((cmt, i) => (
+                      <div key={i} className={style.commentItem}>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 10,
+                          }}
+                        >
+                          <img
+                            src={
+                              cmt.userId?.profilePicture ||
+                              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"
+                            }
+                            alt="user"
+                            style={{
+                              width: 32,
+                              height: 32,
+                              borderRadius: "50%",
+                            }}
+                          />
+                          <strong>{cmt.userId?.fullName || "User"}</strong>
+                        </div>
+                        <p style={{ marginLeft: 42 }}>{cmt.text}</p>
+
+                        <div className={style.replySection}>
+                          {cmt.replies?.map((reply, rIdx) => (
+                            <div key={rIdx} style={{ marginLeft: 52 }}>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: 8,
+                                }}
+                              >
+                                <img
+                                  src={
+                                    reply.userId?.profilePicture ||
+                                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX-cskA2FbOzFi7ACNiGruheINgAXEqFL1TQ&s"
+                                  }
+                                  style={{
+                                    width: 28,
+                                    height: 28,
+                                    borderRadius: "50%",
+                                  }}
+                                  alt="reply-user"
+                                />
+                                <strong>
+                                  {reply.userId?.fullName || "User"}
+                                </strong>
+                              </div>
+                              <p style={{ marginLeft: 36 }}>{reply.text}</p>
+                            </div>
+                          ))}
+
+                          <div style={{ marginLeft: 42, marginTop: 6 }}>
+                            <input
+                              type="text"
+                              placeholder="Write a reply..."
+                              value={replyInputs[cmt._id] || ""}
+                              onChange={(e) =>
+                                setReplyInputs((prev) => ({
+                                  ...prev,
+                                  [cmt._id]: e.target.value,
+                                }))
+                              }
+                              className={style.commentInput}
+                            />
+                            <button
+                              onClick={() => handleReply(post._id, cmt._id)}
+                              className={style.commentBtn}
+                            >
+                              Reply
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          ))
+        ) : (
+          <p style={{ textAlign: "center", marginTop: "10px" }}>
+            No posts found
+          </p>
+        )}
+      </div>
+    </>
+  );
+};
+
+export default PostInputBox;
+
+// this is for testing

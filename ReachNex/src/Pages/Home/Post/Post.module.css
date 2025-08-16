@@ -1,0 +1,12 @@
+.postuser{
+display: flex;
+background-color: azure;
+width: 300px;
+}
+.postimage{
+     border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  border: 3px solid #fff;
+  background-color: #fff;
+}

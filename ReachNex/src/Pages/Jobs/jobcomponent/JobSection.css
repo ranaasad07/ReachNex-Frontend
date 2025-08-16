@@ -1,0 +1,183 @@
+.jobsSection {
+  width: 100%;
+  max-width: 750px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  font-family: "Segoe UI", sans-serif;
+}
+
+.jobsSection__title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.addJobForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.formRow {
+  display: flex;
+  gap: 12px;
+}
+
+.addJobForm input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.addJobForm button {
+  width: 150px;
+  align-self: flex-start;
+  background-color: #0a66c2;
+  color: #fff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.addJobForm button:hover {
+  background-color: #004182;
+}
+
+.jobCardsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.jobCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 16px;
+  background-color: #fafafa;
+  transition: box-shadow 0.3s ease;
+}
+
+.jobCard:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.jobCard__logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  object-fit: contain;
+  background-color: white;
+}
+
+.jobCard__info {
+  flex: 1;
+}
+
+.jobCard__info h3 {
+  margin: 0 0 4px;
+  font-size: 16px;
+  color: #0a66c2;
+}
+
+.jobCard__info .company {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.jobCard__info .location {
+  font-size: 13px;
+  color: #555;
+}
+
+.jobCard__info .employmentType {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 20px;
+  background-color: #edf3f8;
+  color: #0a66c2;
+  display: inline-block;
+  margin-top: 4px;
+}
+
+.jobCard__applyBtn {
+  background-color: transparent;
+  border: 1px solid #0a66c2;
+  color: #0a66c2;
+  border-radius: 20px;
+  padding: 6px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.jobCard__applyBtn:hover {
+  background-color: #e6f0fb;
+}
+
+.jobsSection__footer {
+  font-size: 13px;
+  color: #666;
+  margin-top: 24px;
+  text-align: center;
+}
+
+
+.jobsSection__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.toggleFormBtn {
+  background-color: #0a66c2;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.toggleFormBtn:hover {
+  background-color: #004182;
+}
+
+.jobTextarea {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  resize: vertical;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.jobCard .description {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #444;
+  line-height: 1.4;
+}
+.jobCard__applyBtn[disabled] {
+  background-color: #999;
+  cursor: not-allowed;
+}

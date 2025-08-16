@@ -1,0 +1,85 @@
+.rightSidebar {
+  background-color: white;
+  color: black;
+  padding: 16px;
+  border-radius: 10px;
+  width: 300px;
+  font-family: Arial, sans-serif;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+   height: 500px; 
+  overflow-y: auto;
+}
+
+.rightSidebar__title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.rightSidebar__list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.rightSidebar__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.rightSidebar__avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.rightSidebar__info {
+  flex: 1;
+}
+
+.rightSidebar__name {
+  font-weight: bold;
+  margin: 0;
+  color: #000;
+}
+
+.rightSidebar__desc {
+  font-size: 13px;
+  color: #666;
+  margin: 4px 0 8px;
+}
+
+.rightSidebar__followBtn {
+  padding: 6px 12px;
+  background-color: transparent;
+  color: #0a66c2;
+  border: 1px solid #0a66c2;
+  border-radius: 20px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.rightSidebar__followBtn:hover {
+  background-color: #e6f0fb;
+}
+
+.rightSidebar__link {
+  display: block;
+  margin-top: 16px;
+  font-size: 13px;
+  color: #0a66c2;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.rightSidebar__followBtn.following {
+  background-color: #e6f0fb;
+  color: #0a66c2;
+  border: 1px solid #0a66c2;
+}
+
+

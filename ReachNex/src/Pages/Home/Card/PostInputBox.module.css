@@ -1,0 +1,217 @@
+.mainContainer {
+  /* max-width: 550px;  */
+  width: 550px;      
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  padding: 16px;
+  margin: 0 auto; 
+}
+
+
+.postContainer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.postButton {
+  width: 100%;
+  border-radius: 25px;
+  padding: 10px 16px;
+  background-color: #f0f2f5;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.2s ease-in-out;
+}
+
+.postButton:hover {
+  background-color: #e4e6eb;
+}
+
+.profilePic {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border: 2px solid #ddd;
+  cursor: pointer;
+}
+
+.icons ul {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0 0 0;
+}
+
+.icons ul li {
+  list-style: none;
+  font-weight: 500;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+/* Specific icon colors */
+.icons li:nth-child(1) svg {
+  color: #0cf41b;
+  color: #0cf41b;
+}
+
+.icons li:nth-child(2) svg {
+  color: #006eff;
+  color: #006eff;
+}
+
+.icons li:nth-child(3) svg {
+  color: #ff9900;
+}
+
+.feedSection {
+  margin-top: 24px;
+  width: 100%;
+  max-width: 550px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.postCard {
+  background-color: white;
+  padding: 16px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  margin-bottom: 20px;
+  width: 550px;       
+}
+
+
+.postUser {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.postProfile {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.postMedia {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-top: 12px;
+}
+
+.actions {
+  display: flex;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.actions button {
+  background-color: #f3f2ef;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+}
+
+.actions button:hover {
+  background-color: #e2e0dd;
+}
+
+.commentBox {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+}
+
+.commentInput {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  margin-top: 8px;
+  margin-bottom: 10px;
+  outline: none;
+}
+
+.commentBtn {
+  padding: 6px 14px;
+  background-color: #0a66c2;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-left: 6px;
+}
+
+.commentBtn:hover {
+  background-color: #004182;
+}
+
+.commentList {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.commentItem {
+  background-color: #f9f9f9;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.replySection {
+  margin-top: 8px;
+  margin-left: 32px;
+  padding-left: 10px;
+  border-left: 2px solid #eee;
+}
+
+.replySection input {
+  width: 90%;
+  margin-top: 6px;
+  padding: 6px 10px;
+  border-radius: 18px;
+  border: 1px solid #ccc;
+  outline: none;
+}
+
+.replySection button {
+  padding: 5px 12px;
+  background-color: #0a66c2;
+  color: white;
+  border: none;
+  border-radius: 16px;
+  font-size: 13px;
+  margin-left: 4px;
+  cursor: pointer;
+}
+
+.replySection button:hover {
+  background-color: #004182;
+}
+
+
+/* PostInputBox.module.css */
+.linkWrap {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}

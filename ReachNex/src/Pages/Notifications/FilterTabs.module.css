@@ -1,0 +1,32 @@
+
+.tabContainer {
+  display: flex;
+  background-color: #f3f6f9;
+  border-radius: 12px;
+  padding: 8px;
+  gap: 8px;
+  width: 600px;
+  margin: 20px auto;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.06);
+}
+
+.tab {
+  border: none;
+  background-color: transparent;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #555;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.tab:hover {
+  background-color: #e6f0fb;
+}
+
+.active {
+  background-color: #0a66c2;
+  color: white;
+  font-weight: 600;
+}

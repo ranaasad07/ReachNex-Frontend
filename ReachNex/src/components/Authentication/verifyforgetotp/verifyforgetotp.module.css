@@ -1,0 +1,65 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.signUpBox {
+    width: 100%;
+    max-width: 400px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    padding: 10px 40px;
+    text-align: center;
+    /* Center align form elements like <p> and <h1> */
+}
+
+.signUpBox label {
+    font-size: 13px;
+}
+
+.signUpBox input {
+    background-color: #FAFAFA;
+}
+
+.signUpBox h1 {
+    font-family: "Kaushan Script", cursive;
+    font-weight: bold;
+}
+
+.signUpBox p {
+    font-size: 16px;
+    color: #737373;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.signUpBox content {
+    font-size: 13px;
+}
+
+.signUpBox input {
+    height: 10px;
+}
+
+.login {
+    width: 100%;
+    max-width: 400px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    text-align: center;
+    padding: 20px;
+    margin-top: 10px;
+    background-color: #fff;
+}
+
+.login a {
+    color: #007bff;
+    /* Bootstrap primary blue */
+    text-decoration: none;
+}
+
+.login a:hover {
+    text-decoration: underline;
+}

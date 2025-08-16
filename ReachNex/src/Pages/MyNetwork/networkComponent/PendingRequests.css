@@ -1,0 +1,66 @@
+.pending-section {
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.pending-card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.pending-card img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.pending-info h4 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.pending-info p {
+  margin: 4px 0;
+  color: #777;
+  font-size: 14px;
+}
+
+.pending-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.accept-btn {
+  background-color: #0073b1;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.reject-btn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.accept-btn:hover {
+  background-color: #005b91;
+}
+
+.reject-btn:hover {
+  background-color: #c0392b;
+}
